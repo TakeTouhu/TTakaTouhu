@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "定款作成くん - 電子定款を簡単作成",
-  description: "株式会社・合同会社の定款を無料で簡単に作成。ステップ形式で入力するだけで、法的に正確な電子定款をPDFで出力できます。",
+  title: "VTbridge - グローバルエンジニア・リソースプロバイダー",
+  description: "東欧の優秀な海外エンジニアと日本企業をつなぐB2Bコーディネーションサービス。採用コスト・手間なし、英日コミュニケーション内包で即戦力エンジニアをご提供します。",
 };
 
 export default function RootLayout({
