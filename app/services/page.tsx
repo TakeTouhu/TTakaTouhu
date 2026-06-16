@@ -270,13 +270,13 @@ export default function Services() {
           <div className="text-center mb-12">
             <div className="text-blue-700 font-semibold text-sm uppercase tracking-widest mb-3">COMPARISON</div>
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              {t('他の手段との比較', 'VTbridge vs Alternatives')}
+              {t('他の手段との比較', 'VTaBridge vs Alternatives')}
             </h2>
           </div>
           <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
             <div className="grid grid-cols-4 bg-gray-900 text-white text-sm font-semibold">
               <div className="p-4">{t('比較項目', 'Criteria')}</div>
-              <div className="p-4 text-center text-blue-400">VTbridge</div>
+              <div className="p-4 text-center text-blue-400">VTaBridge</div>
               <div className="p-4 text-center">{t('国内SES・派遣', 'Domestic SES')}</div>
               <div className="p-4 text-center">{t('大手オフショア', 'Offshore Dev')}</div>
             </div>

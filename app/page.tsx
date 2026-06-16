@@ -109,7 +109,7 @@ export default function Home() {
             <p className="text-xl text-slate-300 leading-relaxed mb-10 max-w-2xl">
               {t(
                 '海外の高スキルエンジニアと日本企業をつなぐB2Bコーディネーションサービス。採用コスト・手間なし、必要な期間だけ即戦力エンジニアを活用できます。',
-                'VTbridge connects Japanese companies with highly skilled overseas engineers through B2B coordination. No hiring costs, no employment risk — just the talent you need, when you need it.'
+                'VTaBridge connects Japanese companies with highly skilled overseas engineers through B2B coordination. No hiring costs, no employment risk — just the talent you need, when you need it.'
               )}
             </p>
             <div className="flex flex-wrap gap-4">
@@ -187,8 +187,8 @@ export default function Home() {
           <div className="mt-8 bg-blue-50 border border-blue-100 rounded-2xl p-6 text-center">
             <p className="text-blue-900 font-semibold text-lg">
               {t(
-                'VTbridgeは、この課題をコスト・品質・スピードの三拍子で解決します。',
-                'VTbridge solves this with a combination of cost efficiency, quality assurance, and speed.'
+                'VTaBridgeは、この課題をコスト・品質・スピードの三拍子で解決します。',
+                'VTaBridge solves this with a combination of cost efficiency, quality assurance, and speed.'
               )}
             </p>
           </div>
@@ -241,7 +241,7 @@ export default function Home() {
           <div className="text-center mb-12">
             <div className="text-blue-400 font-semibold text-sm uppercase tracking-widest mb-3">WHY VTBRIDGE</div>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {t('VTbridgeが選ばれる理由', 'Why Companies Choose VTbridge')}
+              {t('VTaBridgeが選ばれる理由', 'Why Companies Choose VTaBridge')}
             </h2>
           </div>
           <div className="grid md:grid-cols-2 gap-5">
@@ -279,7 +279,7 @@ export default function Home() {
               href="/about"
               className="inline-flex items-center gap-2 text-blue-400 font-semibold hover:text-blue-300 transition-colors"
             >
-              {t('VTbridgeについて詳しく', 'Learn more about VTbridge')}
+              {t('VTaBridgeについて詳しく', 'Learn more about VTaBridge')}
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>

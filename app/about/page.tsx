@@ -72,7 +72,7 @@ export default function About() {
         <div className="max-w-4xl mx-auto">
           <div className="text-blue-400 font-semibold text-sm uppercase tracking-widest mb-3">ABOUT VTBRIDGE</div>
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            {t('VTbridgeについて', 'About VTbridge')}
+            {t('VTaBridgeについて', 'About VTaBridge')}
           </h1>
           <p className="text-xl text-slate-300 max-w-2xl leading-relaxed">
             {t(
@@ -96,8 +96,8 @@ export default function About() {
             </h2>
             <p className="text-gray-600 leading-relaxed mb-4">
               {t(
-                'VTbridgeは、優秀な海外エンジニアと日本企業の間にある壁を取り除くことを使命としています。言語の壁、採用の手間、コスト、品質への不安——これらすべてをまとめて解決し、日本企業が世界のエンジニアリング力を活用できる環境を整えます。',
-                'VTbridge\'s mission is to remove the barriers between skilled overseas engineers and Japanese companies. Language gaps, hiring complexity, cost concerns, quality uncertainty — we address all of these so that Japanese businesses can confidently tap into global engineering talent.'
+                'VTaBridgeは、優秀な海外エンジニアと日本企業の間にある壁を取り除くことを使命としています。言語の壁、採用の手間、コスト、品質への不安——これらすべてをまとめて解決し、日本企業が世界のエンジニアリング力を活用できる環境を整えます。',
+                'VTaBridge\'s mission is to remove the barriers between skilled overseas engineers and Japanese companies. Language gaps, hiring complexity, cost concerns, quality uncertainty — we address all of these so that Japanese businesses can confidently tap into global engineering talent.'
               )}
             </p>
             <p className="text-gray-600 leading-relaxed">
@@ -139,7 +139,7 @@ export default function About() {
           <div className="text-center mb-12">
             <div className="text-blue-700 font-semibold text-sm uppercase tracking-widest mb-3">STRENGTHS</div>
             <h2 className="text-3xl font-bold text-gray-900">
-              {t('VTbridgeの強み', 'Our Strengths')}
+              {t('VTaBridgeの強み', 'Our Strengths')}
             </h2>
           </div>
           <div className="grid md:grid-cols-2 gap-5">
@@ -195,14 +195,14 @@ export default function About() {
               </h3>
               <p className="text-gray-600 leading-relaxed mb-4">
                 {t(
-                  'VTbridgeは、ITソリューション営業の実務経験、英日バイリンガルコミュニケーション能力、そして海外エンジニアとの既存ネットワークを活かして立ち上げたサービスです。',
-                  'VTbridge was built on a foundation of IT solution sales experience, bilingual English-Japanese communication, and an established overseas engineer network.'
+                  'VTaBridgeは、ITソリューション営業の実務経験、英日バイリンガルコミュニケーション能力、そして海外エンジニアとの既存ネットワークを活かして立ち上げたサービスです。',
+                  'VTaBridge was built on a foundation of IT solution sales experience, bilingual English-Japanese communication, and an established overseas engineer network.'
                 )}
               </p>
               <p className="text-gray-600 leading-relaxed mb-6">
                 {t(
-                  '顧客企業が何に困っているかを即座に理解し、最適なエンジニアを素早く調達する——このサイクルを高速で回せることが、VTbridgeの最大の競争優位です。',
-                  'The ability to quickly understand what clients need and rapidly source the right engineer is VTbridge\'s core competitive advantage — and it comes directly from the founder\'s background.'
+                  '顧客企業が何に困っているかを即座に理解し、最適なエンジニアを素早く調達する——このサイクルを高速で回せることが、VTaBridgeの最大の競争優位です。',
+                  'The ability to quickly understand what clients need and rapidly source the right engineer is VTaBridge\'s core competitive advantage — and it comes directly from the founder\'s background.'
                 )}
               </p>
               <Link

@@ -6,7 +6,7 @@ export default function Company() {
 
   const companyInfo = lang === 'en'
     ? [
-        { label: 'Company Name', value: 'VTbridge' },
+        { label: 'Company Name', value: 'VTaBridge' },
         { label: 'Established', value: 'June 2026' },
         { label: 'Representative', value: 'Ryuto Takahashi' },
         { label: 'Business Type', value: 'Global Engineer Resource Provider (B2B Coordination)' },
@@ -14,7 +14,7 @@ export default function Company() {
         { label: 'Contract Type', value: 'Business consignment (quasi-mandate / fixed-scope)' },
       ]
     : [
-        { label: '会社名', value: 'VTbridge' },
+        { label: '会社名', value: 'VTaBridge' },
         { label: '設立', value: '2026年6月' },
         { label: '代表者', value: '髙橋 龍飛（Ryuto Takahashi）' },
         { label: '事業内容', value: 'グローバルエンジニア・リソースプロバイダー事業（B2Bコーディネーション）' },
@@ -56,7 +56,7 @@ export default function Company() {
     ? [
         {
           title: 'Not Staffing or Temp Agency',
-          desc: 'VTbridge provides outsourced resource coordination under business consignment contracts. This is distinct from worker dispatch (staffing agency) and employment referral services under Japanese law.',
+          desc: 'VTaBridge provides outsourced resource coordination under business consignment contracts. This is distinct from worker dispatch (staffing agency) and employment referral services under Japanese law.',
         },
         {
           title: 'Statement of Work (SOW)',
@@ -70,7 +70,7 @@ export default function Company() {
     : [
         {
           title: '労働者派遣・有料職業紹介との区別',
-          desc: 'VTbridgeは業務委託（準委任・請負）契約に基づくリソース提供サービスです。労働者派遣法・有料職業紹介には該当しません。',
+          desc: 'VTaBridgeは業務委託（準委任・請負）契約に基づくリソース提供サービスです。労働者派遣法・有料職業紹介には該当しません。',
         },
         {
           title: 'SOW（業務範囲書）の整備',
@@ -93,8 +93,8 @@ export default function Company() {
           </h1>
           <p className="text-xl text-slate-300 max-w-2xl leading-relaxed">
             {t(
-              'VTbridgeは、日本企業と海外エンジニアをつなぐB2Bコーディネーション事業を展開しています。',
-              'VTbridge operates a B2B coordination service connecting Japanese companies with skilled overseas engineers.'
+              'VTaBridgeは、日本企業と海外エンジニアをつなぐB2Bコーディネーション事業を展開しています。',
+              'VTaBridge operates a B2B coordination service connecting Japanese companies with skilled overseas engineers.'
             )}
           </p>
         </div>

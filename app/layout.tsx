@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "VTbridge - グローバルエンジニア・リソースプロバイダー",
+  title: "VTaBridge - グローバルエンジニア・リソースプロバイダー",
   description: "海外の優秀なエンジニアと日本企業をつなぐB2Bコーディネーションサービス。採用コスト・手間なしで即戦力グローバルエンジニアをご提供します。",
 };
 
