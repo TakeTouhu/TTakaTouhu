@@ -99,12 +99,22 @@ export default function Services() {
         },
       ];
 
-  const skills = [
-    { category: lang === 'en' ? 'Mobile App' : 'モバイルアプリ', tags: ['iOS', 'Android', 'Flutter', 'React Native'] },
-    { category: lang === 'en' ? 'Web Frontend' : 'Webフロントエンド', tags: ['React', 'Vue.js', 'Next.js', 'TypeScript'] },
-    { category: lang === 'en' ? 'Web Backend' : 'Webバックエンド', tags: ['Node.js', 'Python', 'Laravel', 'Go'] },
-    { category: 'UI/UX Design', tags: ['Figma', 'Prototyping', 'Design System'] },
-    { category: lang === 'en' ? 'Cloud Infrastructure' : 'クラウドインフラ', tags: ['AWS', 'GCP', 'Azure', 'Docker'] },
+  const skillGroups = [
+    {
+      category: lang === 'en' ? 'Backend' : 'バックエンド',
+      color: 'bg-blue-50 text-blue-700 border-blue-100',
+      tags: ['Java', 'Python', 'PHP', 'Go', 'Node.js'],
+    },
+    {
+      category: lang === 'en' ? 'Frontend' : 'フロントエンド',
+      color: 'bg-indigo-50 text-indigo-700 border-indigo-100',
+      tags: ['React', 'Vue'],
+    },
+    {
+      category: lang === 'en' ? 'Cloud Infrastructure' : 'クラウドインフラ',
+      color: 'bg-slate-50 text-slate-700 border-slate-200',
+      tags: ['AWS', 'Azure', 'GCP'],
+    },
   ];
 
   const steps = lang === 'en'
@@ -207,13 +217,13 @@ export default function Services() {
               )}
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {skills.map((s) => (
-              <div key={s.category} className="bg-white border border-gray-200 rounded-xl p-5 hover:border-blue-200 transition-colors">
-                <div className="font-semibold text-gray-900 mb-3">{s.category}</div>
+          <div className="grid md:grid-cols-3 gap-5">
+            {skillGroups.map((g) => (
+              <div key={g.category} className="bg-white border border-gray-200 rounded-2xl p-6 hover:border-blue-200 hover:shadow-sm transition-all">
+                <div className="font-bold text-gray-900 mb-4">{g.category}</div>
                 <div className="flex flex-wrap gap-2">
-                  {s.tags.map((tag) => (
-                    <span key={tag} className="bg-blue-50 text-blue-700 text-xs font-medium px-3 py-1 rounded-full">
+                  {g.tags.map((tag) => (
+                    <span key={tag} className={`text-sm font-semibold px-4 py-2 rounded-lg border ${g.color}`}>
                       {tag}
                     </span>
                   ))}

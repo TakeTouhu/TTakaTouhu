@@ -219,8 +219,74 @@ export default function About() {
         </div>
       </section>
 
-      {/* Values */}
+      {/* CEO Message */}
       <section className="py-20 px-6 bg-gray-50">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="text-blue-700 font-semibold text-sm uppercase tracking-widest mb-3">MESSAGE</div>
+            <h2 className="text-3xl font-bold text-gray-900">
+              {t('代表者メッセージ', "A Message from Our Founder")}
+            </h2>
+          </div>
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="bg-gradient-to-br from-slate-900 to-blue-950 px-8 py-6 flex items-center gap-4">
+              <div className="w-14 h-14 bg-blue-700 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
+                髙
+              </div>
+              <div className="text-white">
+                <div className="font-bold text-lg">髙橋 龍飛</div>
+                <div className="text-blue-300 text-sm">Ryuto Takahashi — {t('代表', 'Founder & CEO')}, VTaBridge</div>
+              </div>
+            </div>
+            <div className="px-8 py-8">
+              {lang === 'en' ? (
+                <div className="space-y-5 text-gray-700 leading-relaxed">
+                  <p>
+                    Japan faces a serious and growing shortage of IT talent, driven by an aging population and the rapid acceleration of digital transformation. At the same time, around the world, there are countless engineers with outstanding technical skills and deep experience — but not always the right opportunity to put those skills to work.
+                  </p>
+                  <p>
+                    I founded VTaBridge with one clear conviction: <span className="font-semibold text-gray-900">I want to be the bridge that connects these two worlds.</span>
+                  </p>
+                  <p>
+                    Differences in nationality or language do not diminish the quality of engineering skill, or the passion to create something valuable. By connecting the IT talent that Japanese companies need with engineers making their mark on the global stage, we aim to help businesses grow and overcome their resource challenges.
+                  </p>
+                  <p>
+                    Our goal is not simply to match people — it is to build meaningful, lasting relationships for both clients and engineers alike, growing together as long-term partners.
+                  </p>
+                  <p>
+                    We will continue to contribute to the success of Japanese companies through the power of global talent.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-5 text-gray-700 leading-relaxed">
+                  <p>
+                    日本では少子高齢化やDX推進の加速により、IT人材不足が大きな課題となっています。一方で、海外には高い技術力と豊富な経験を持ちながら、その能力を十分に発揮する機会に恵まれていない優秀なエンジニアが数多く存在します。
+                  </p>
+                  <p>
+                    私は、この両者をつなぐ架け橋になりたいという想いから当社を設立しました。
+                  </p>
+                  <p>
+                    国籍や言語の違いはあっても、優れた技術力や価値を生み出したいという情熱に違いはありません。私たちは、日本企業が必要とする優秀なIT人材と、世界で活躍するエンジニアを結び付けることで、人材不足の解消と企業の成長を支援してまいります。
+                  </p>
+                  <p>
+                    単なる人材紹介ではなく、お客様とエンジニア双方にとって価値のある関係を築き、長期的なパートナーとして共に成長していくことを目指しています。
+                  </p>
+                  <p>
+                    これからも、グローバルな人材活用を通じて、日本企業のさらなる発展に貢献してまいります。
+                  </p>
+                </div>
+              )}
+              <div className="mt-8 pt-6 border-t border-gray-100 flex items-center gap-3">
+                <div className="text-sm text-gray-500">{t('代表', 'Founder & CEO')}</div>
+                <div className="font-bold text-gray-900">髙橋 龍飛 <span className="font-normal text-gray-500 text-sm">/ Ryuto Takahashi</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Values */}
+      <section className="py-20 px-6 bg-white">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <div className="text-blue-700 font-semibold text-sm uppercase tracking-widest mb-3">VALUES</div>
