@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useWizard } from '@/lib/store';
 import { shareInfoSchema } from '@/lib/validation';
@@ -10,7 +10,7 @@ export default function Step3Shares() {
   const { state, updateShareInfo, setStep } = useWizard();
   const isKabushiki = state.basicInfo.companyType === '株式会社';
 
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<ShareInfo>({
+  const { register, handleSubmit, watch, control, formState: { errors } } = useForm<ShareInfo>({
     resolver: zodResolver(shareInfoSchema),
     defaultValues: {
       authorizedShares: state.shareInfo.authorizedShares || 400,
@@ -129,22 +129,26 @@ export default function Step3Shares() {
             株式の譲渡制限 <span className="text-red-500">*</span>
           </label>
           <p className="text-xs text-gray-500 mb-3">中小企業では通常「あり」を選択します（取締役会の承認が必要になります）</p>
-          <div className="grid grid-cols-2 gap-3">
-            <label className="cursor-pointer">
-              <input type="radio" {...register('hasTransferRestriction', { setValueAs: v => v === 'true' })} value="true" className="sr-only" />
-              <div className={`border-2 rounded-lg p-3 text-center text-sm font-medium transition-all ${watchRestriction ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300'}`}>
-                あり（推奨）
-                <p className="text-xs text-gray-500 font-normal mt-1">取締役会の承認が必要</p>
+          <Controller
+            name="hasTransferRestriction"
+            control={control}
+            render={({ field }) => (
+              <div className="grid grid-cols-2 gap-3">
+                <label className="cursor-pointer" onClick={() => field.onChange(true)}>
+                  <div className={`border-2 rounded-lg p-3 text-center text-sm font-medium transition-all ${field.value === true ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300'}`}>
+                    あり（推奨）
+                    <p className="text-xs text-gray-500 font-normal mt-1">取締役会の承認が必要</p>
+                  </div>
+                </label>
+                <label className="cursor-pointer" onClick={() => field.onChange(false)}>
+                  <div className={`border-2 rounded-lg p-3 text-center text-sm font-medium transition-all ${field.value === false ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300'}`}>
+                    なし
+                    <p className="text-xs text-gray-500 font-normal mt-1">自由に譲渡可能</p>
+                  </div>
+                </label>
               </div>
-            </label>
-            <label className="cursor-pointer">
-              <input type="radio" {...register('hasTransferRestriction', { setValueAs: v => v === 'true' })} value="false" className="sr-only" />
-              <div className={`border-2 rounded-lg p-3 text-center text-sm font-medium transition-all ${!watchRestriction ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300'}`}>
-                なし
-                <p className="text-xs text-gray-500 font-normal mt-1">自由に譲渡可能</p>
-              </div>
-            </label>
-          </div>
+            )}
+          />
         </div>
 
         <div className="pt-4 flex justify-between">
