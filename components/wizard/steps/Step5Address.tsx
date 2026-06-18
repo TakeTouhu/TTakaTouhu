@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useWizard } from '@/lib/store';
@@ -18,8 +19,10 @@ const PREFECTURES = [
 
 export default function Step5Address() {
   const { state, updateAddressInfo, setStep } = useWizard();
+  const [zipCode, setZipCode] = useState('');
+  const [zipStatus, setZipStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
-  const { register, handleSubmit, formState: { errors } } = useForm<AddressInfo>({
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<AddressInfo>({
     resolver: zodResolver(addressInfoSchema),
     defaultValues: {
       prefecture: state.addressInfo.prefecture || '',
@@ -28,6 +31,35 @@ export default function Step5Address() {
       buildingName: state.addressInfo.buildingName || '',
     },
   });
+
+  const lookupZip = async (zip: string) => {
+    const digits = zip.replace(/[^0-9]/g, '');
+    if (digits.length !== 7) return;
+    setZipStatus('loading');
+    try {
+      const res = await fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${digits}`);
+      const json = await res.json();
+      if (json.status === 200 && json.results) {
+        const r = json.results[0];
+        setValue('prefecture', r.address1, { shouldValidate: true });
+        setValue('city', r.address2, { shouldValidate: true });
+        setValue('streetAddress', r.address3, { shouldValidate: true });
+        setZipStatus('success');
+      } else {
+        setZipStatus('error');
+      }
+    } catch {
+      setZipStatus('error');
+    }
+  };
+
+  const handleZipChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.replace(/[^0-9\-]/g, '');
+    setZipCode(val);
+    setZipStatus('idle');
+    const digits = val.replace(/[^0-9]/g, '');
+    if (digits.length === 7) lookupZip(digits);
+  };
 
   const onSubmit = (data: AddressInfo) => {
     updateAddressInfo(data);
@@ -46,6 +78,33 @@ export default function Step5Address() {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {/* 郵便番号 */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            郵便番号
+          </label>
+          <div className="flex items-center gap-2">
+            <span className="text-gray-500 text-sm">〒</span>
+            <input
+              value={zipCode}
+              onChange={handleZipChange}
+              placeholder="1234567（ハイフン不要）"
+              maxLength={8}
+              className="flex-1 border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              type="button"
+              onClick={() => lookupZip(zipCode)}
+              disabled={zipStatus === 'loading' || zipCode.replace(/[^0-9]/g, '').length !== 7}
+              className="bg-gray-100 text-gray-700 px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors disabled:opacity-40"
+            >
+              {zipStatus === 'loading' ? '検索中…' : '住所検索'}
+            </button>
+          </div>
+          {zipStatus === 'success' && <p className="text-green-600 text-xs mt-1">✓ 住所を自動入力しました</p>}
+          {zipStatus === 'error' && <p className="text-red-500 text-xs mt-1">郵便番号が見つかりませんでした</p>}
+        </div>
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             都道府県 <span className="text-red-500">*</span>
