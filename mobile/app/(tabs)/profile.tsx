@@ -3,6 +3,7 @@ import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
   Switch, Alert, TextInput, Modal, ActivityIndicator
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
@@ -11,6 +12,7 @@ import { COLORS } from '@/lib/utils';
 
 export default function ProfileScreen() {
   const { profile, signOut, refreshProfile } = useAuth();
+  const router = useRouter();
   const [showEdit, setShowEdit] = useState(false);
   const [displayName, setDisplayName] = useState(profile?.display_name ?? '');
   const [saving, setSaving] = useState(false);
@@ -55,6 +57,18 @@ export default function ProfileScreen() {
         <Text style={styles.username}>@{profile?.username}</Text>
         <TouchableOpacity style={styles.editBtn} onPress={() => { setDisplayName(profile?.display_name ?? ''); setShowEdit(true); }}>
           <Text style={styles.editBtnText}>プロフィールを編集</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Friends */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>ソーシャル</Text>
+        <TouchableOpacity style={styles.settingRow} onPress={() => router.push('/friends')}>
+          <View style={styles.settingLeft}>
+            <Ionicons name="people-outline" size={20} color={COLORS.primary} />
+            <Text style={[styles.settingLabel, { marginLeft: 12 }]}>フレンド管理</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={16} color={COLORS.textSecondary} />
         </TouchableOpacity>
       </View>
 

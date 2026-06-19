@@ -6,7 +6,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
-import { Exercise, WorkoutSet, WeightUnit } from '@/lib/types';
+import { Exercise, WorkoutSet, WeightUnit, Group } from '@/lib/types';
 import { COLORS } from '@/lib/utils';
 
 interface SetEntry {
@@ -27,6 +27,11 @@ export default function WorkoutScreen() {
   const [notes, setNotes] = useState('');
   const [saving, setSaving] = useState(false);
   const [showExercisePicker, setShowExercisePicker] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [savedSummary, setSavedSummary] = useState<{ exerciseGroups: { name: string; sets: SetEntry[] }[] } | null>(null);
+  const [myGroups, setMyGroups] = useState<Group[]>([]);
+  const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
+  const [sharing, setSharing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [defaultUnit, setDefaultUnit] = useState<WeightUnit>(profile?.preferred_unit ?? 'kg');
 
@@ -34,7 +39,16 @@ export default function WorkoutScreen() {
     supabase.from('exercises').select('*').order('name_ja').then(({ data }) => {
       setExercises(data ?? []);
     });
-  }, []);
+    if (profile) {
+      supabase
+        .from('group_members')
+        .select('group:groups(id, name)')
+        .eq('user_id', profile.id)
+        .then(({ data }) => {
+          setMyGroups((data ?? []).map(d => d.group as Group));
+        });
+    }
+  }, [profile]);
 
   const filteredExercises = exercises.filter(e =>
     (e.name_ja ?? e.name).toLowerCase().includes(searchQuery.toLowerCase())
@@ -139,9 +153,22 @@ export default function WorkoutScreen() {
     // Check goal achievements
     await checkGoals(profile.id);
 
-    Alert.alert('保存完了', '今日のトレーニングを保存しました！', [
-      { text: 'OK', onPress: () => setSets([]) }
-    ]);
+    // Show share modal if user has groups
+    const summary = {
+      exerciseGroups: [...new Set(sets.map(s => s.exerciseId))].map(eid => ({
+        name: sets.find(s => s.exerciseId === eid)?.exerciseName ?? '',
+        sets: sets.filter(s => s.exerciseId === eid),
+      })),
+    };
+    setSavedSummary(summary);
+
+    if (myGroups.length > 0) {
+      setShowShareModal(true);
+    } else {
+      Alert.alert('保存完了', '今日のトレーニングを保存しました！', [
+        { text: 'OK', onPress: () => setSets([]) }
+      ]);
+    }
   }
 
   async function checkGoals(userId: string) {
@@ -280,6 +307,83 @@ export default function WorkoutScreen() {
             )}
             contentContainerStyle={{ paddingBottom: 40 }}
           />
+        </View>
+      </Modal>
+
+      {/* Share to group modal */}
+      <Modal visible={showShareModal} animationType="slide" presentationStyle="pageSheet">
+        <View style={styles.modal}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>グループにシェア</Text>
+            <TouchableOpacity onPress={() => { setShowShareModal(false); setSets([]); }}>
+              <Ionicons name="close" size={24} color={COLORS.text} />
+            </TouchableOpacity>
+          </View>
+
+          {/* Workout summary */}
+          {savedSummary && (
+            <View style={styles.shareSummary}>
+              <Text style={styles.shareSummaryTitle}>今日のトレーニング</Text>
+              {savedSummary.exerciseGroups.map(g => (
+                <Text key={g.name} style={styles.shareSummaryItem}>
+                  · {g.name} ({g.sets.length}セット)
+                </Text>
+              ))}
+            </View>
+          )}
+
+          <Text style={styles.shareLabel}>シェアするグループを選択</Text>
+          {myGroups.map(group => (
+            <TouchableOpacity
+              key={group.id}
+              style={[styles.groupSelectRow, selectedGroupId === group.id && styles.groupSelectRowActive]}
+              onPress={() => setSelectedGroupId(g => g === group.id ? null : group.id)}
+            >
+              <View style={styles.groupSelectAvatar}>
+                <Text style={styles.groupSelectAvatarText}>{group.name[0]?.toUpperCase()}</Text>
+              </View>
+              <Text style={styles.groupSelectName}>{group.name}</Text>
+              {selectedGroupId === group.id && (
+                <Ionicons name="checkmark-circle" size={22} color={COLORS.primary} />
+              )}
+            </TouchableOpacity>
+          ))}
+
+          <View style={styles.shareActions}>
+            <TouchableOpacity
+              style={[styles.shareBtn, !selectedGroupId && styles.shareBtnDisabled]}
+              disabled={!selectedGroupId || sharing}
+              onPress={async () => {
+                if (!selectedGroupId || !profile || !savedSummary) return;
+                setSharing(true);
+                const content = `💪 トレーニング完了！\n${savedSummary.exerciseGroups.map(g => `・${g.name} ${g.sets.length}セット`).join('\n')}`;
+                await supabase.from('messages').insert({
+                  group_id: selectedGroupId,
+                  user_id: profile.id,
+                  content,
+                  message_type: 'workout_share',
+                  metadata: { exercises: savedSummary.exerciseGroups.map(g => g.name) },
+                });
+                setSharing(false);
+                setShowShareModal(false);
+                setSets([]);
+                Alert.alert('シェアしました！', 'グループにトレーニングをシェアしました 💪');
+              }}
+            >
+              {sharing ? <ActivityIndicator color="#fff" size="small" /> : (
+                <>
+                  <Ionicons name="share-social" size={18} color="#fff" />
+                  <Text style={styles.shareBtnText}>シェアする</Text>
+                </>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.skipBtn}
+              onPress={() => { setShowShareModal(false); setSets([]); }}
+            >
+              <Text style={styles.skipBtnText}>スキップ</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     </View>
@@ -442,4 +546,43 @@ const styles = StyleSheet.create({
   },
   exerciseItemName: { fontSize: 15, fontWeight: '600', color: COLORS.text },
   exerciseItemCategory: { fontSize: 13, color: COLORS.textSecondary },
+  shareSummary: {
+    backgroundColor: COLORS.surface,
+    borderRadius: 14,
+    padding: 16,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  shareSummaryTitle: { fontSize: 14, fontWeight: '700', color: COLORS.primary, marginBottom: 8 },
+  shareSummaryItem: { fontSize: 14, color: COLORS.text, marginBottom: 4 },
+  shareLabel: { fontSize: 13, fontWeight: '700', color: COLORS.textSecondary, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 10 },
+  groupSelectRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    padding: 14,
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: COLORS.border,
+    marginBottom: 8,
+  },
+  groupSelectRowActive: { borderColor: COLORS.primary, backgroundColor: `${COLORS.primary}10` },
+  groupSelectAvatar: { width: 40, height: 40, borderRadius: 12, backgroundColor: COLORS.primary, justifyContent: 'center', alignItems: 'center' },
+  groupSelectAvatarText: { fontSize: 18, fontWeight: '800', color: '#fff' },
+  groupSelectName: { flex: 1, fontSize: 15, fontWeight: '600', color: COLORS.text },
+  shareActions: { marginTop: 20, gap: 10 },
+  shareBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: COLORS.primary,
+    borderRadius: 14,
+    padding: 16,
+  },
+  shareBtnDisabled: { opacity: 0.5 },
+  shareBtnText: { color: '#fff', fontSize: 16, fontWeight: '700' },
+  skipBtn: { alignItems: 'center', paddingVertical: 12 },
+  skipBtnText: { color: COLORS.textSecondary, fontSize: 15 },
 });

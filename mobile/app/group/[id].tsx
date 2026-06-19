@@ -218,6 +218,8 @@ export default function GroupScreen() {
 
 function ChatBubble({ message, isMe }: { message: Message; isMe: boolean }) {
   const isAchievement = message.message_type === 'achievement';
+  const isWorkoutShare = message.message_type === 'workout_share';
+
   if (isAchievement) {
     return (
       <View style={styles.achievementBubble}>
@@ -225,6 +227,42 @@ function ChatBubble({ message, isMe }: { message: Message; isMe: boolean }) {
         <Text style={styles.achievementTime}>
           {new Date(message.created_at).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
         </Text>
+      </View>
+    );
+  }
+
+  if (isWorkoutShare) {
+    const exercises = (message.metadata?.exercises as string[] | undefined) ?? [];
+    return (
+      <View style={[styles.bubbleWrapper, isMe && styles.bubbleWrapperMe]}>
+        {!isMe && (
+          <View style={styles.bubbleAvatar}>
+            <Text style={styles.bubbleAvatarText}>
+              {(message.profile?.display_name ?? message.profile?.username ?? '?')[0].toUpperCase()}
+            </Text>
+          </View>
+        )}
+        <View style={[styles.workoutShareCard, isMe && styles.workoutShareCardMe]}>
+          {!isMe && (
+            <Text style={styles.bubbleSender}>{message.profile?.display_name ?? message.profile?.username}</Text>
+          )}
+          <View style={styles.workoutShareHeader}>
+            <Text style={styles.workoutShareEmoji}>💪</Text>
+            <Text style={styles.workoutShareTitle}>トレーニング完了！</Text>
+          </View>
+          {exercises.length > 0 && (
+            <View style={styles.workoutShareExercises}>
+              {exercises.map(e => (
+                <View key={e} style={styles.workoutShareTag}>
+                  <Text style={styles.workoutShareTagText}>{e}</Text>
+                </View>
+              ))}
+            </View>
+          )}
+          <Text style={styles.workoutShareTime}>
+            {new Date(message.created_at).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
+          </Text>
+        </View>
       </View>
     );
   }
@@ -266,9 +304,16 @@ function GoalCard({ goal }: { goal: Goal }) {
   );
 }
 
+type CompareMode = 'sessions' | 'volume' | 'exercise';
+
 function CompareTab({ groupId, members }: { groupId: string; members: GroupMember[] }) {
-  const [data, setData] = useState<{ username: string; sessions: number; totalSets: number }[]>([]);
+  const [mode, setMode] = useState<CompareMode>('sessions');
+  const [sessionData, setSessionData] = useState<{ username: string; sessions: number; volume: number }[]>([]);
+  const [exercises, setExercises] = useState<{ id: string; name: string }[]>([]);
+  const [selectedExercise, setSelectedExercise] = useState<string | null>(null);
+  const [exerciseData, setExerciseData] = useState<{ username: string; maxWeight: number; unit: string }[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingEx, setLoadingEx] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -276,47 +321,168 @@ function CompareTab({ groupId, members }: { groupId: string; members: GroupMembe
       const weekStart = new Date(now);
       weekStart.setDate(now.getDate() - now.getDay());
       weekStart.setHours(0, 0, 0, 0);
+      const weekStartStr = weekStart.toISOString().split('T')[0];
 
-      const results = await Promise.all(
-        members.map(async m => {
-          const { count: sessions } = await supabase
+      const [results, { data: ex }] = await Promise.all([
+        Promise.all(members.map(async m => {
+          const { data: sessions } = await supabase
             .from('workout_sessions')
-            .select('*', { count: 'exact', head: true })
+            .select('*, sets:workout_sets(weight, reps, unit)')
             .eq('user_id', m.user_id)
-            .gte('date', weekStart.toISOString().split('T')[0]);
+            .gte('date', weekStartStr);
+
+          let volume = 0;
+          for (const s of sessions ?? []) {
+            for (const set of s.sets ?? []) {
+              const w = set.unit === 'lbs' ? (set.weight ?? 0) / 2.20462 : (set.weight ?? 0);
+              volume += w * (set.reps ?? 0);
+            }
+          }
           return {
             username: m.profile?.display_name ?? m.profile?.username ?? 'Unknown',
-            sessions: sessions ?? 0,
-            totalSets: 0,
+            sessions: sessions?.length ?? 0,
+            volume: Math.round(volume),
           };
-        })
-      );
-      setData(results.sort((a, b) => b.sessions - a.sessions));
+        })),
+        supabase.from('exercises').select('id, name_ja, name').order('name_ja').limit(20),
+      ]);
+
+      setSessionData(results.sort((a, b) => b.sessions - a.sessions));
+      setExercises((ex ?? []).map(e => ({ id: e.id, name: e.name_ja ?? e.name })));
       setLoading(false);
     }
     load();
   }, [groupId, members]);
 
+  async function loadExerciseComparison(exerciseId: string) {
+    setLoadingEx(true);
+    setSelectedExercise(exerciseId);
+    const results = await Promise.all(
+      members.map(async m => {
+        const { data } = await supabase
+          .from('workout_sets')
+          .select('weight, unit, session:workout_sessions!inner(user_id)')
+          .eq('workout_sessions.user_id', m.user_id)
+          .eq('exercise_id', exerciseId)
+          .not('weight', 'is', null)
+          .order('weight', { ascending: false })
+          .limit(1);
+        const best = data?.[0];
+        return {
+          username: m.profile?.display_name ?? m.profile?.username ?? 'Unknown',
+          maxWeight: best?.weight ?? 0,
+          unit: best?.unit ?? 'kg',
+        };
+      })
+    );
+    setExerciseData(results.sort((a, b) => b.maxWeight - a.maxWeight));
+    setLoadingEx(false);
+  }
+
   if (loading) return <ActivityIndicator color={COLORS.primary} style={{ marginTop: 40 }} />;
+
+  const currentData = mode === 'sessions'
+    ? [...sessionData].sort((a, b) => b.sessions - a.sessions)
+    : [...sessionData].sort((a, b) => b.volume - a.volume);
+
+  const maxVal = mode === 'sessions'
+    ? Math.max(1, ...currentData.map(d => d.sessions))
+    : Math.max(1, ...currentData.map(d => d.volume));
 
   return (
     <ScrollView contentContainerStyle={styles.tabContent}>
-      <Text style={styles.compareTitle}>今週のトレーニング回数</Text>
-      {data.map((d, i) => (
-        <View key={d.username} style={styles.compareRow}>
-          <Text style={styles.compareRank}>#{i + 1}</Text>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.compareUsername}>{d.username}</Text>
-            <View style={styles.compareBarBg}>
-              <View style={[
-                styles.compareBar,
-                { width: `${Math.max(4, (d.sessions / Math.max(1, data[0].sessions)) * 100)}%` },
-              ]} />
+      {/* Mode selector */}
+      <View style={styles.modeRow}>
+        {([
+          { id: 'sessions', label: 'セッション数' },
+          { id: 'volume', label: 'ボリューム' },
+          { id: 'exercise', label: '種目別' },
+        ] as { id: CompareMode; label: string }[]).map(m => (
+          <TouchableOpacity
+            key={m.id}
+            style={[styles.modeBtn, mode === m.id && styles.modeBtnActive]}
+            onPress={() => setMode(m.id)}
+          >
+            <Text style={[styles.modeBtnText, mode === m.id && styles.modeBtnTextActive]}>{m.label}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {/* Sessions / Volume ranking */}
+      {(mode === 'sessions' || mode === 'volume') && (
+        <>
+          <Text style={styles.compareTitle}>
+            {mode === 'sessions' ? '今週のセッション数' : '今週の総ボリューム (kg)'}
+          </Text>
+          {currentData.map((d, i) => {
+            const val = mode === 'sessions' ? d.sessions : d.volume;
+            const displayVal = mode === 'sessions' ? `${val}回` : val >= 1000 ? `${(val / 1000).toFixed(1)}t` : `${val}kg`;
+            return (
+              <View key={d.username} style={styles.compareRow}>
+                <View style={[styles.rankBadge, i === 0 && styles.rankBadgeGold, i === 1 && styles.rankBadgeSilver, i === 2 && styles.rankBadgeBronze]}>
+                  <Text style={styles.compareRank}>{i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`}</Text>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.compareUsername}>{d.username}</Text>
+                  <View style={styles.compareBarBg}>
+                    <View style={[styles.compareBar, { width: `${Math.max(2, (val / maxVal) * 100)}%` }]} />
+                  </View>
+                </View>
+                <Text style={styles.compareCount}>{displayVal}</Text>
+              </View>
+            );
+          })}
+        </>
+      )}
+
+      {/* Exercise comparison */}
+      {mode === 'exercise' && (
+        <>
+          <Text style={styles.compareTitle}>種目を選んで最高重量を比較</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.exerciseScroll}>
+            {exercises.map(e => (
+              <TouchableOpacity
+                key={e.id}
+                style={[styles.exerciseChip, selectedExercise === e.id && styles.exerciseChipActive]}
+                onPress={() => loadExerciseComparison(e.id)}
+              >
+                <Text style={[styles.exerciseChipText, selectedExercise === e.id && styles.exerciseChipTextActive]}>
+                  {e.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+
+          {loadingEx && <ActivityIndicator color={COLORS.primary} style={{ marginTop: 20 }} />}
+
+          {!loadingEx && selectedExercise && exerciseData.map((d, i) => (
+            <View key={d.username} style={styles.compareRow}>
+              <View style={[styles.rankBadge, i === 0 && styles.rankBadgeGold, i === 1 && styles.rankBadgeSilver, i === 2 && styles.rankBadgeBronze]}>
+                <Text style={styles.compareRank}>{i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`}</Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.compareUsername}>{d.username}</Text>
+                <View style={styles.compareBarBg}>
+                  <View style={[
+                    styles.compareBar,
+                    { width: `${Math.max(2, (d.maxWeight / Math.max(1, exerciseData[0].maxWeight)) * 100)}%` },
+                  ]} />
+                </View>
+              </View>
+              <Text style={styles.compareCount}>
+                {d.maxWeight > 0 ? `${d.maxWeight}${d.unit}` : '未記録'}
+              </Text>
             </View>
-          </View>
-          <Text style={styles.compareCount}>{d.sessions}回</Text>
-        </View>
-      ))}
+          ))}
+
+          {!loadingEx && !selectedExercise && (
+            <View style={styles.empty}>
+              <Ionicons name="barbell-outline" size={40} color={COLORS.textSecondary} />
+              <Text style={styles.emptyText}>種目を選択してください</Text>
+            </View>
+          )}
+        </>
+      )}
     </ScrollView>
   );
 }
@@ -466,13 +632,46 @@ const styles = StyleSheet.create({
   goalMeta: { fontSize: 12, color: COLORS.textSecondary, marginTop: 6 },
   empty: { alignItems: 'center', paddingVertical: 60, gap: 12 },
   emptyText: { color: COLORS.textSecondary, fontSize: 14 },
-  compareTitle: { fontSize: 17, fontWeight: '700', color: COLORS.text, marginBottom: 16 },
-  compareRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 12 },
-  compareRank: { fontSize: 14, fontWeight: '800', color: COLORS.textSecondary, width: 28 },
+  // Workout share bubble
+  workoutShareCard: {
+    maxWidth: '80%',
+    backgroundColor: COLORS.surface,
+    borderRadius: 16,
+    borderBottomLeftRadius: 4,
+    padding: 12,
+    borderWidth: 1.5,
+    borderColor: `${COLORS.success}60`,
+  },
+  workoutShareCardMe: { borderBottomLeftRadius: 16, borderBottomRightRadius: 4, borderColor: `${COLORS.success}80` },
+  workoutShareHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 8 },
+  workoutShareEmoji: { fontSize: 18 },
+  workoutShareTitle: { fontSize: 14, fontWeight: '800', color: COLORS.success },
+  workoutShareExercises: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginBottom: 6 },
+  workoutShareTag: { backgroundColor: `${COLORS.primary}20`, borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3 },
+  workoutShareTagText: { fontSize: 11, fontWeight: '600', color: COLORS.primary },
+  workoutShareTime: { fontSize: 10, color: COLORS.textSecondary, textAlign: 'right' },
+  // Compare
+  modeRow: { flexDirection: 'row', backgroundColor: COLORS.surface, borderRadius: 12, padding: 4, gap: 4, marginBottom: 16 },
+  modeBtn: { flex: 1, paddingVertical: 8, borderRadius: 8, alignItems: 'center' },
+  modeBtnActive: { backgroundColor: COLORS.primary },
+  modeBtnText: { fontSize: 12, fontWeight: '600', color: COLORS.textSecondary },
+  modeBtnTextActive: { color: '#fff' },
+  compareTitle: { fontSize: 15, fontWeight: '700', color: COLORS.text, marginBottom: 12 },
+  compareRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 14 },
+  rankBadge: { width: 36, height: 36, borderRadius: 10, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.surfaceLight },
+  rankBadgeGold: { backgroundColor: '#F59E0B20' },
+  rankBadgeSilver: { backgroundColor: '#94A3B820' },
+  rankBadgeBronze: { backgroundColor: '#B4521420' },
+  compareRank: { fontSize: 16, textAlign: 'center' },
   compareUsername: { fontSize: 14, fontWeight: '600', color: COLORS.text, marginBottom: 4 },
-  compareBarBg: { height: 8, backgroundColor: COLORS.surfaceLight, borderRadius: 4 },
-  compareBar: { height: 8, backgroundColor: COLORS.primary, borderRadius: 4 },
-  compareCount: { fontSize: 15, fontWeight: '700', color: COLORS.primary, width: 36, textAlign: 'right' },
+  compareBarBg: { height: 6, backgroundColor: COLORS.surfaceLight, borderRadius: 3 },
+  compareBar: { height: 6, backgroundColor: COLORS.primary, borderRadius: 3 },
+  compareCount: { fontSize: 14, fontWeight: '700', color: COLORS.primary, minWidth: 56, textAlign: 'right' },
+  exerciseScroll: { marginBottom: 16 },
+  exerciseChip: { backgroundColor: COLORS.surface, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, marginRight: 8, borderWidth: 1, borderColor: COLORS.border },
+  exerciseChipActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
+  exerciseChipText: { fontSize: 13, fontWeight: '600', color: COLORS.textSecondary },
+  exerciseChipTextActive: { color: '#fff' },
   goalFormOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
   goalForm: { backgroundColor: COLORS.bg, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 20, paddingBottom: 40 },
   goalFormHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
