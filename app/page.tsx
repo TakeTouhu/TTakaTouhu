@@ -99,16 +99,22 @@ export default function Home() {
               <span className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
               {t('グローバルエンジニア・リソースプロバイダー', 'Global Engineer Resource Provider')}
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-6">
+            <h1 className="text-5xl md:text-6xl font-black leading-tight mb-4">
               {lang === 'en' ? (
                 <><span className="text-blue-400">Global Engineers,</span><br />Ready to Deliver.</>
               ) : (
-                <>優秀な海外エンジニアを、<br /><span className="text-blue-400">即戦力として。</span></>
+                <>海外エンジニア採用を、<br /><span className="text-blue-400">もっとシンプルに。</span></>
               )}
             </h1>
+            <p className="text-blue-300 text-lg mb-6 font-medium">
+              {t(
+                '世界の優秀なエンジニアと日本企業をつなぐ架け橋に。',
+                'The bridge connecting world-class engineers with Japanese companies.'
+              )}
+            </p>
             <p className="text-xl text-slate-300 leading-relaxed mb-10 max-w-2xl">
               {t(
-                '海外の高スキルエンジニアと日本企業をつなぐB2Bコーディネーションサービス。採用コスト・手間なし、必要な期間だけ即戦力エンジニアを活用できます。',
+                'IT人材不足・DX推進でお悩みの企業へ。海外の高スキルエンジニアをフリーランス契約で週単位からご提供。採用コスト・手間なしで即戦力エンジニアを活用できます。',
                 'VTaBridge connects Japanese companies with highly skilled overseas engineers through B2B coordination. No hiring costs, no employment risk — just the talent you need, when you need it.'
               )}
             </p>
@@ -140,7 +146,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-        <div className="h-16 bg-white" style={{ clipPath: 'ellipse(120% 100% at 50% 100%)' }} />
+        <div className="h-16 bg-white [clip-path:ellipse(120%_100%_at_50%_100%)]" />
       </section>
 
       {/* Problem */}

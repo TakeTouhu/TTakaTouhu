@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useLanguage } from './LanguageProvider';
-import { BridgeIcon } from './Logo';
+import { LogoFooter } from './Logo';
 
 export default function Footer() {
   const { t } = useLanguage();
@@ -17,22 +17,32 @@ export default function Footer() {
   return (
     <footer className="bg-slate-950 text-slate-400 py-12 px-6">
       <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-8">
-          <div>
-            <div className="flex items-center gap-2.5 mb-3">
-              <div className="w-9 h-9 bg-blue-700 rounded-xl flex items-center justify-center flex-shrink-0">
-                <BridgeIcon className="w-6 h-6" color="white" />
-              </div>
-              <span className="font-bold text-lg text-white">VTa<span className="text-blue-400">Bridge</span></span>
+        <div className="flex flex-col md:flex-row items-start justify-between gap-8 mb-8">
+          <div className="max-w-xs">
+            <div className="mb-3">
+              <LogoFooter />
             </div>
-            <p className="text-sm text-slate-500 max-w-xs whitespace-pre-line">
+            <p className="text-sm text-slate-500 leading-relaxed mb-4">
               {t(
-                'グローバルエンジニア・リソースプロバイダー\n日本企業と海外優秀エンジニアをつなぐB2Bコーディネーションサービス',
-                'Global Engineer Resource Provider\nB2B coordination service connecting Japanese companies with skilled overseas engineers'
+                '世界の優秀なエンジニアと日本企業をつなぐ架け橋に。',
+                'The bridge connecting world-class engineers with Japanese companies.'
               )}
             </p>
+            {/* LinkedIn link (Priority A: link building) */}
+            <a
+              href="https://www.linkedin.com/company/vtabridge"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-blue-400 transition-colors"
+              aria-label="VTaBridge LinkedIn"
+            >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+              LinkedIn
+            </a>
           </div>
-          <nav className="flex flex-wrap gap-6 text-sm">
+          <nav className="flex flex-wrap gap-6 text-sm md:pt-1">
             {links.map((link) => (
               <Link key={link.href} href={link.href} className="hover:text-white transition-colors">
                 {link.label}

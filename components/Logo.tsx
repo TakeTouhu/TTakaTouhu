@@ -1,52 +1,47 @@
-export function BridgeIcon({ className = 'w-8 h-8', color = 'currentColor' }: { className?: string; color?: string }) {
+export function VTaMarkIcon({ className = 'w-10 h-10' }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Base road */}
-      <line x1="4" y1="68" x2="116" y2="68" stroke={color} strokeWidth="5" strokeLinecap="round" />
-      {/* Left tower */}
-      <line x1="28" y1="68" x2="28" y2="20" stroke={color} strokeWidth="5" strokeLinecap="round" />
-      {/* Right tower */}
-      <line x1="92" y1="68" x2="92" y2="20" stroke={color} strokeWidth="5" strokeLinecap="round" />
-      {/* Left tower top dot */}
-      <circle cx="28" cy="18" r="4" fill={color} />
-      {/* Right tower top dot */}
-      <circle cx="92" cy="18" r="4" fill={color} />
-      {/* Cable arc */}
-      <path d="M28 18 Q60 42 92 18" stroke={color} strokeWidth="4.5" strokeLinecap="round" fill="none" />
-      {/* Vertical suspenders */}
-      <line x1="48" y1="31" x2="48" y2="68" stroke={color} strokeWidth="3.5" strokeLinecap="round" />
-      <line x1="60" y1="36" x2="60" y2="68" stroke={color} strokeWidth="3.5" strokeLinecap="round" />
-      <line x1="72" y1="31" x2="72" y2="68" stroke={color} strokeWidth="3.5" strokeLinecap="round" />
-      {/* Left diagonal brace */}
-      <line x1="4" y1="68" x2="28" y2="20" stroke={color} strokeWidth="4.5" strokeLinecap="round" />
-      {/* Right diagonal brace */}
-      <line x1="116" y1="68" x2="92" y2="20" stroke={color} strokeWidth="4.5" strokeLinecap="round" />
-      {/* Bottom left pillar */}
-      <line x1="28" y1="68" x2="28" y2="76" stroke={color} strokeWidth="5" strokeLinecap="round" />
-      {/* Bottom right pillar */}
-      <line x1="92" y1="68" x2="92" y2="76" stroke={color} strokeWidth="5" strokeLinecap="round" />
+    <svg className={className} viewBox="0 0 110 82" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* Left piece — dark blue */}
+      <polygon points="0,2 40,2 55,78 14,78" fill="#1D55B5" />
+      {/* Right piece — cyan */}
+      <polygon points="48,2 80,2 74,78 50,78" fill="#29B5E8" />
+      {/* Bridge arc — white */}
+      <path d="M34 8 Q62 34 78 8" stroke="white" strokeWidth="6" strokeLinecap="round" fill="none" />
     </svg>
   );
 }
 
-export function LogoDark({ className = 'h-9' }: { className?: string }) {
+export function LogoHeader() {
   return (
-    <div className={`flex items-center gap-3 ${className}`}>
-      <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center">
-        <BridgeIcon className="w-7 h-7" color="white" />
-      </div>
-      <span className="font-bold text-xl tracking-tight text-gray-900">VTa<span className="text-blue-700">Bridge</span></span>
+    <div className="flex items-center gap-2.5">
+      <VTaMarkIcon className="h-9 w-auto" />
+      <span className="font-black text-xl tracking-tight text-gray-900">VTaBridge</span>
     </div>
   );
 }
 
-export function LogoLight({ className = 'h-9' }: { className?: string }) {
+export function LogoFooter() {
   return (
-    <div className={`flex items-center gap-3 ${className}`}>
-      <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
-        <BridgeIcon className="w-7 h-7" color="white" />
-      </div>
-      <span className="font-bold text-xl tracking-tight text-white">VTa<span className="text-blue-300">Bridge</span></span>
+    <div className="flex items-center gap-2.5">
+      <VTaMarkIcon className="h-8 w-auto" />
+      <span className="font-black text-lg tracking-tight text-white">VTaBridge</span>
     </div>
   );
+}
+
+export function LogoHeroLight() {
+  return (
+    <div className="flex items-center gap-3">
+      <VTaMarkIcon className="h-12 w-auto" />
+      <div>
+        <div className="font-black text-3xl tracking-tight text-white leading-none">VTaBridge</div>
+        <div className="text-blue-300 text-xs mt-0.5">世界の優秀なエンジニアと日本企業をつなぐ架け橋に。</div>
+      </div>
+    </div>
+  );
+}
+
+// Keep backward compat — used nowhere critical anymore
+export function BridgeIcon({ className = 'w-8 h-8', color = 'currentColor' }: { className?: string; color?: string }) {
+  return <VTaMarkIcon className={className} />;
 }
