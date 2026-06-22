@@ -1,25 +1,31 @@
+import Image from 'next/image';
+
+// SVG mark — used on dark backgrounds (footer, hero) where PNG logo won't work
 export function VTaMarkIcon({ className = 'w-10 h-10' }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 110 82" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Left piece — dark blue */}
       <polygon points="0,2 40,2 55,78 14,78" fill="#1D55B5" />
-      {/* Right piece — cyan */}
       <polygon points="48,2 80,2 74,78 50,78" fill="#29B5E8" />
-      {/* Bridge arc — white */}
       <path d="M34 8 Q62 34 78 8" stroke="white" strokeWidth="6" strokeLinecap="round" fill="none" />
     </svg>
   );
 }
 
+// Header logo — uses the actual PNG (light background)
 export function LogoHeader() {
   return (
-    <div className="flex items-center gap-2.5">
-      <VTaMarkIcon className="h-9 w-auto" />
-      <span className="font-black text-xl tracking-tight text-gray-900">VTaBridge</span>
-    </div>
+    <Image
+      src="/logo.png"
+      alt="VTaBridge"
+      width={180}
+      height={52}
+      className="h-10 w-auto object-contain"
+      priority
+    />
   );
 }
 
+// Footer logo — SVG mark + white text (dark background)
 export function LogoFooter() {
   return (
     <div className="flex items-center gap-2.5">
@@ -29,6 +35,7 @@ export function LogoFooter() {
   );
 }
 
+// Hero section — SVG mark + white text (used on blue/dark gradient)
 export function LogoHeroLight() {
   return (
     <div className="flex items-center gap-3">
@@ -41,7 +48,6 @@ export function LogoHeroLight() {
   );
 }
 
-// Keep backward compat — used nowhere critical anymore
-export function BridgeIcon({ className = 'w-8 h-8', color = 'currentColor' }: { className?: string; color?: string }) {
+export function BridgeIcon({ className = 'w-8 h-8' }: { className?: string }) {
   return <VTaMarkIcon className={className} />;
 }
