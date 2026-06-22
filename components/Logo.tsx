@@ -25,13 +25,16 @@ export function LogoHeader() {
   );
 }
 
-// Footer logo — SVG mark + white text (dark background)
+// Footer logo — PNG on dark background (背景透過)
 export function LogoFooter() {
   return (
-    <div className="flex items-center gap-2.5">
-      <VTaMarkIcon className="h-8 w-auto" />
-      <span className="font-black text-lg tracking-tight text-white">VTaBridge</span>
-    </div>
+    <Image
+      src="/logo-footer.png"
+      alt="VTaBridge"
+      width={360}
+      height={140}
+      className="h-14 w-auto object-contain"
+    />
   );
 }
 
