@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 // SVG mark — used on dark/light backgrounds
 export function VTaMarkIcon({ className = 'w-10 h-10' }: { className?: string }) {
   return (
@@ -9,16 +11,17 @@ export function VTaMarkIcon({ className = 'w-10 h-10' }: { className?: string })
   );
 }
 
-// Header logo — SVG mark + dark text (light background)
+// Header logo — PNG image (360×140px intrinsic, displayed at h-14)
 export function LogoHeader() {
   return (
-    <div className="flex items-center gap-2.5">
-      <VTaMarkIcon className="h-10 w-auto" />
-      <div className="leading-none">
-        <div className="font-black text-xl tracking-tight text-blue-800">VTaBridge</div>
-        <div className="text-[10px] text-blue-500 mt-0.5 whitespace-nowrap">世界の優秀なエンジニアと日本企業をつなぐ</div>
-      </div>
-    </div>
+    <Image
+      src="/logo.png"
+      alt="VTaBridge"
+      width={360}
+      height={140}
+      className="h-14 w-auto object-contain"
+      priority
+    />
   );
 }
 

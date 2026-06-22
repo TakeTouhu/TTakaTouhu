@@ -20,7 +20,7 @@ export default function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-gray-100 shadow-sm">
-      <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-6 py-2 flex items-center justify-between">
         <Link href="/" aria-label="VTaBridge ホーム">
           <LogoHeader />
         </Link>
