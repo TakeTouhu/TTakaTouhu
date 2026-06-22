@@ -29,17 +29,6 @@ export default function Company() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Office Image */}
-      <div className="w-full h-64 md:h-96 relative overflow-hidden bg-slate-200">
-        <Image
-          src="/office.png"
-          alt="VTaBridge オフィス"
-          fill
-          className="object-cover"
-          priority
-        />
-      </div>
-
       {/* Page Header */}
       <section className="bg-gradient-to-br from-slate-900 to-blue-950 text-white py-16 px-6">
         <div className="max-w-4xl mx-auto">
@@ -55,6 +44,17 @@ export default function Company() {
           </p>
         </div>
       </section>
+
+      {/* Office Image */}
+      <div className="w-full h-64 md:h-96 relative overflow-hidden bg-slate-200">
+        <Image
+          src="/office.png"
+          alt="VTaBridge オフィス"
+          fill
+          className="object-cover"
+          priority
+        />
+      </div>
 
       {/* Company Info Table */}
       <section className="py-20 px-6 bg-white">
