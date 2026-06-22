@@ -89,73 +89,63 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       {/* Hero */}
       <section className="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white overflow-hidden relative">
-        {/* Globe — absolutely positioned so it doesn't change hero height */}
+        {/* Globe — absolutely positioned, entire SVG spins on Y axis */}
         <div
           className="absolute right-0 top-0 bottom-0 hidden lg:flex items-center pointer-events-none"
-          style={{ perspective: '1400px', paddingRight: '0', marginRight: '-80px' }}
+          style={{ perspective: '1600px', marginRight: '-180px' }}
         >
-          <svg width="860" height="860" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-2xl">
-            <defs>
-              <radialGradient id="globeGrad" cx="38%" cy="35%" r="65%">
-                <stop offset="0%" stopColor="#1e40af" stopOpacity="0.9" />
-                <stop offset="50%" stopColor="#0f2a5e" stopOpacity="0.95" />
-                <stop offset="100%" stopColor="#050d1f" stopOpacity="1" />
-              </radialGradient>
-              <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
-              </radialGradient>
-              <filter id="glow3d">
-                <feGaussianBlur stdDeviation="3.5" result="blur" />
-                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-              </filter>
-              <filter id="softglow3d">
-                <feGaussianBlur stdDeviation="2" result="blur" />
-                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-              </filter>
-              <clipPath id="globeClip3d">
-                <circle cx="200" cy="200" r="170" />
-              </clipPath>
-              <style>{`
-                @keyframes globe3dSpin {
-                  from { transform: rotateY(0deg); }
-                  to   { transform: rotateY(360deg); }
-                }
-                .globe-surface-3d {
-                  animation: globe3dSpin 22s linear infinite;
-                  transform-box: fill-box;
-                  transform-origin: center;
-                }
-              `}</style>
-            </defs>
+          {/* Spinning wrapper — rotates the WHOLE globe */}
+          <div style={{ animation: 'globeYSpin 22s linear infinite', flexShrink: 0 }}>
+            <svg width="1100" height="1100" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="globeGrad" cx="40%" cy="36%" r="64%">
+                  <stop offset="0%" stopColor="#1e40af" stopOpacity="0.92" />
+                  <stop offset="55%" stopColor="#0f2a5e" stopOpacity="0.96" />
+                  <stop offset="100%" stopColor="#020b1f" stopOpacity="1" />
+                </radialGradient>
+                <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.45" />
+                  <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
+                </radialGradient>
+                <filter id="glow3d">
+                  <feGaussianBlur stdDeviation="3.5" result="blur" />
+                  <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                </filter>
+                <filter id="softglow3d">
+                  <feGaussianBlur stdDeviation="2" result="blur" />
+                  <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                </filter>
+                <clipPath id="globeClip3d">
+                  <circle cx="200" cy="200" r="170" />
+                </clipPath>
+                <style>{`
+                  @keyframes globeYSpin {
+                    from { transform: rotateY(0deg); }
+                    to   { transform: rotateY(360deg); }
+                  }
+                `}</style>
+              </defs>
 
-            {/* Outer glow */}
-            <circle cx="200" cy="200" r="200" fill="url(#glowGrad)" />
+              {/* Outer glow */}
+              <circle cx="200" cy="200" r="200" fill="url(#glowGrad)" />
+              {/* Globe body */}
+              <circle cx="200" cy="200" r="170" fill="url(#globeGrad)" />
 
-            {/* Globe body */}
-            <circle cx="200" cy="200" r="170" fill="url(#globeGrad)" />
-
-            {/* Latitude lines — static */}
-            <g clipPath="url(#globeClip3d)" stroke="#29b5e8" strokeOpacity="0.18" strokeWidth="0.9" fill="none">
-              <ellipse cx="200" cy="200" rx="170" ry="28" />
-              <ellipse cx="200" cy="200" rx="170" ry="68" />
-              <ellipse cx="200" cy="200" rx="170" ry="115" />
-              <ellipse cx="200" cy="200" rx="170" ry="154" />
-              <line x1="30" y1="200" x2="370" y2="200" />
-            </g>
-
-            {/* 3D rotating surface */}
-            <g className="globe-surface-3d" clipPath="url(#globeClip3d)">
-              {/* Longitude lines */}
-              <g stroke="#29b5e8" strokeOpacity="0.2" strokeWidth="0.9" fill="none">
-                <ellipse cx="200" cy="200" rx="28" ry="170" />
-                <ellipse cx="200" cy="200" rx="80" ry="170" />
-                <ellipse cx="200" cy="200" rx="142" ry="170" />
+              {/* Grid lines */}
+              <g clipPath="url(#globeClip3d)" stroke="#29b5e8" strokeOpacity="0.2" strokeWidth="0.8" fill="none">
+                <ellipse cx="200" cy="200" rx="170" ry="26" />
+                <ellipse cx="200" cy="200" rx="170" ry="65" />
+                <ellipse cx="200" cy="200" rx="170" ry="112" />
+                <ellipse cx="200" cy="200" rx="170" ry="152" />
+                <line x1="30" y1="200" x2="370" y2="200" />
+                <ellipse cx="200" cy="200" rx="26" ry="170" />
+                <ellipse cx="200" cy="200" rx="78" ry="170" />
+                <ellipse cx="200" cy="200" rx="140" ry="170" />
                 <line x1="200" y1="30" x2="200" y2="370" />
               </g>
 
-              {/* Continent shapes */}
-              <g fill="#2563eb" fillOpacity="0.45">
+              {/* Continents */}
+              <g clipPath="url(#globeClip3d)" fill="#2563eb" fillOpacity="0.5">
                 <ellipse cx="152" cy="148" rx="50" ry="33" transform="rotate(-15 152 148)" />
                 <ellipse cx="138" cy="220" rx="30" ry="44" transform="rotate(10 138 220)" />
                 <ellipse cx="260" cy="163" rx="40" ry="25" transform="rotate(-5 260 163)" />
@@ -173,14 +163,13 @@ export default function Home() {
                 <circle cx="130" cy="250" r="4.5" fill="#7dd3fc" />
                 <circle cx="280" cy="247" r="4.5" fill="#7dd3fc" />
                 <circle cx="200" cy="100" r="4" fill="#93c5fd" />
-                <circle cx="184" cy="298" r="4" fill="#93c5fd" />
                 <circle cx="96" cy="193" r="4" fill="#bae6fd" />
                 <circle cx="312" cy="200" r="4" fill="#bae6fd" />
                 <circle cx="316" cy="148" r="3.5" fill="#7dd3fc" />
                 <circle cx="85" cy="156" r="3.5" fill="#7dd3fc" />
               </g>
 
-              {/* Network connection lines */}
+              {/* Connection lines */}
               <g filter="url(#softglow3d)" stroke="#38bdf8" strokeWidth="1.4" fill="none">
                 <line x1="200" y1="200" x2="143" y2="146" strokeDasharray="4,3" strokeOpacity="0.7">
                   <animate attributeName="strokeOpacity" values="0.7;0.15;0.7" dur="2.5s" repeatCount="indefinite" />
@@ -216,33 +205,31 @@ export default function Home() {
                   <animate attributeName="strokeOpacity" values="0.05;0.3;0.05" dur="4.2s" repeatCount="indefinite" />
                 </line>
               </g>
-            </g>
 
-            {/* Globe border — static */}
-            <circle cx="200" cy="200" r="170" fill="none" stroke="#29b5e8" strokeOpacity="0.55" strokeWidth="1.5" />
-
-            {/* Highlight — static */}
-            <ellipse cx="150" cy="136" rx="60" ry="40" fill="white" fillOpacity="0.07" transform="rotate(-20 150 136)" />
-
-            {/* Pulse ring — static */}
-            <circle cx="200" cy="200" r="8" fill="none" stroke="#60a5fa" strokeWidth="1.2">
-              <animate attributeName="r" values="8;26;8" dur="2.5s" repeatCount="indefinite" />
-              <animate attributeName="strokeOpacity" values="0.7;0;0.7" dur="2.5s" repeatCount="indefinite" />
-            </circle>
-            <circle cx="200" cy="200" r="5.5" fill="#60a5fa" filter="url(#glow3d)">
-              <animate attributeName="opacity" values="1;0.5;1" dur="1.5s" repeatCount="indefinite" />
-            </circle>
-          </svg>
+              {/* Border */}
+              <circle cx="200" cy="200" r="170" fill="none" stroke="#29b5e8" strokeOpacity="0.5" strokeWidth="1.5" />
+              {/* Highlight */}
+              <ellipse cx="150" cy="136" rx="60" ry="40" fill="white" fillOpacity="0.07" transform="rotate(-20 150 136)" />
+              {/* Pulse */}
+              <circle cx="200" cy="200" r="8" fill="none" stroke="#60a5fa" strokeWidth="1.2">
+                <animate attributeName="r" values="8;26;8" dur="2.5s" repeatCount="indefinite" />
+                <animate attributeName="strokeOpacity" values="0.7;0;0.7" dur="2.5s" repeatCount="indefinite" />
+              </circle>
+              <circle cx="200" cy="200" r="5.5" fill="#60a5fa" filter="url(#glow3d)">
+                <animate attributeName="opacity" values="1;0.5;1" dur="1.5s" repeatCount="indefinite" />
+              </circle>
+            </svg>
+          </div>
         </div>
 
-        <div className="max-w-6xl mx-auto px-6 pt-20 pb-28 relative">
+        <div className="max-w-6xl mx-auto px-6 pt-10 pb-12 relative">
           <div className="absolute inset-0 opacity-10 pointer-events-none">
             <div className="absolute top-10 right-10 w-96 h-96 bg-blue-500 rounded-full blur-3xl" />
             <div className="absolute bottom-0 left-20 w-64 h-64 bg-indigo-400 rounded-full blur-3xl" />
           </div>
           <div className="relative">
-            {/* Left: text */}
-            <div className="max-w-xl">
+            {/* Left: text — restored to original max-w-3xl */}
+            <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 bg-blue-600/30 border border-blue-500/40 rounded-full px-4 py-1.5 text-sm text-blue-300 mb-8">
                 <span className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
                 {t('グローバルエンジニア・リソースプロバイダー', 'Global Engineer Resource Provider')}
