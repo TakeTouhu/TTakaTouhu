@@ -89,33 +89,32 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       {/* Hero */}
       <section className="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white overflow-hidden relative">
-        {/* Globe — absolutely positioned, entire SVG spins on Y axis */}
+        {/* Globe — Earth with arcs converging to Japan */}
         <div
           className="absolute right-0 top-0 bottom-0 hidden lg:flex items-center pointer-events-none"
           style={{ perspective: '1600px', marginRight: '-180px' }}
         >
-          {/* Spinning wrapper — rotates the WHOLE globe */}
-          <div style={{ animation: 'globeYSpin 22s linear infinite', flexShrink: 0 }}>
+          <div style={{ animation: 'globeYSpin 40s linear infinite', flexShrink: 0 }}>
             <svg width="1100" height="1100" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
               <defs>
-                <radialGradient id="globeGrad" cx="40%" cy="36%" r="64%">
-                  <stop offset="0%" stopColor="#1e40af" stopOpacity="0.92" />
-                  <stop offset="55%" stopColor="#0f2a5e" stopOpacity="0.96" />
+                <radialGradient id="globeGrad" cx="38%" cy="34%" r="65%">
+                  <stop offset="0%" stopColor="#1e40af" stopOpacity="0.90" />
+                  <stop offset="50%" stopColor="#0f2a5e" stopOpacity="0.96" />
                   <stop offset="100%" stopColor="#020b1f" stopOpacity="1" />
                 </radialGradient>
                 <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.45" />
+                  <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.40" />
                   <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
                 </radialGradient>
                 <filter id="glow3d">
-                  <feGaussianBlur stdDeviation="3.5" result="blur" />
+                  <feGaussianBlur stdDeviation="3" result="blur" />
                   <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
                 </filter>
-                <filter id="softglow3d">
-                  <feGaussianBlur stdDeviation="2" result="blur" />
+                <filter id="arcglow">
+                  <feGaussianBlur stdDeviation="2.5" result="blur" />
                   <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
                 </filter>
-                <clipPath id="globeClip3d">
+                <clipPath id="globeClip">
                   <circle cx="200" cy="200" r="170" />
                 </clipPath>
                 <style>{`
@@ -126,98 +125,124 @@ export default function Home() {
                 `}</style>
               </defs>
 
-              {/* Outer glow */}
+              {/* Atmospheric glow */}
               <circle cx="200" cy="200" r="200" fill="url(#glowGrad)" />
-              {/* Globe body */}
+              {/* Ocean */}
               <circle cx="200" cy="200" r="170" fill="url(#globeGrad)" />
 
-              {/* Grid lines */}
-              <g clipPath="url(#globeClip3d)" stroke="#29b5e8" strokeOpacity="0.2" strokeWidth="0.8" fill="none">
-                <ellipse cx="200" cy="200" rx="170" ry="26" />
-                <ellipse cx="200" cy="200" rx="170" ry="65" />
-                <ellipse cx="200" cy="200" rx="170" ry="112" />
-                <ellipse cx="200" cy="200" rx="170" ry="152" />
+              {/* Lat/Lon grid */}
+              <g clipPath="url(#globeClip)" stroke="#29b5e8" strokeOpacity="0.12" strokeWidth="0.6" fill="none">
+                <ellipse cx="200" cy="200" rx="170" ry="28" />
+                <ellipse cx="200" cy="200" rx="170" ry="70" />
+                <ellipse cx="200" cy="200" rx="170" ry="120" />
+                <ellipse cx="200" cy="200" rx="170" ry="155" />
                 <line x1="30" y1="200" x2="370" y2="200" />
-                <ellipse cx="200" cy="200" rx="26" ry="170" />
-                <ellipse cx="200" cy="200" rx="78" ry="170" />
+                <ellipse cx="200" cy="200" rx="30" ry="170" />
+                <ellipse cx="200" cy="200" rx="82" ry="170" />
                 <ellipse cx="200" cy="200" rx="140" ry="170" />
                 <line x1="200" y1="30" x2="200" y2="370" />
               </g>
 
-              {/* Continents */}
-              <g clipPath="url(#globeClip3d)" fill="#2563eb" fillOpacity="0.5">
-                <ellipse cx="152" cy="148" rx="50" ry="33" transform="rotate(-15 152 148)" />
-                <ellipse cx="138" cy="220" rx="30" ry="44" transform="rotate(10 138 220)" />
-                <ellipse cx="260" cy="163" rx="40" ry="25" transform="rotate(-5 260 163)" />
-                <ellipse cx="274" cy="234" rx="22" ry="31" transform="rotate(8 274 234)" />
-                <ellipse cx="200" cy="298" rx="21" ry="14" />
-                <ellipse cx="314" cy="152" rx="16" ry="22" transform="rotate(-10 314 152)" />
-                <ellipse cx="86" cy="158" rx="14" ry="19" transform="rotate(12 86 158)" />
+              {/* Continents — simplified Earth shapes */}
+              <g clipPath="url(#globeClip)" fill="#2563eb" fillOpacity="0.52" stroke="#3b82f6" strokeOpacity="0.25" strokeWidth="0.5">
+                {/* North America */}
+                <path d="M 65,118 C 72,88 108,80 130,95 L 150,115 L 162,145 L 165,175 L 150,210 L 130,226 L 102,220 L 76,200 L 58,168 L 55,140 Z" />
+                {/* Greenland */}
+                <ellipse cx="148" cy="85" rx="19" ry="15" transform="rotate(-12 148 85)" />
+                {/* South America */}
+                <path d="M 115,230 C 130,220 155,222 160,240 L 162,265 L 155,295 L 140,318 L 118,308 L 107,282 L 105,255 Z" />
+                {/* Europe */}
+                <path d="M 174,105 L 198,97 L 216,105 L 218,120 L 208,130 L 196,135 L 182,128 L 174,116 Z" />
+                {/* Scandinavia */}
+                <ellipse cx="198" cy="88" rx="10" ry="14" transform="rotate(-8 198 88)" />
+                {/* Africa */}
+                <path d="M 182,148 C 200,138 222,142 230,155 L 235,182 L 230,220 L 220,252 L 205,268 L 190,258 L 182,225 L 176,190 Z" />
+                {/* Asia mainland */}
+                <path d="M 216,108 L 258,94 L 302,97 L 338,114 L 346,140 L 342,164 L 320,174 L 294,170 L 270,180 L 248,186 L 228,180 L 218,160 L 212,135 Z" />
+                {/* India */}
+                <path d="M 246,174 L 260,170 L 268,180 L 264,205 L 252,218 L 240,207 L 238,188 Z" />
+                {/* Southeast Asia */}
+                <ellipse cx="286" cy="194" rx="20" ry="13" transform="rotate(-5 286 194)" />
+                {/* Japan — Honshu */}
+                <ellipse cx="323" cy="152" rx="9" ry="16" transform="rotate(18 323 152)" />
+                {/* Japan — Kyushu */}
+                <ellipse cx="316" cy="172" rx="5" ry="8" transform="rotate(22 316 172)" />
+                {/* Australia */}
+                <path d="M 290,245 C 315,235 350,240 360,260 L 360,286 L 346,300 L 318,304 L 292,292 L 283,268 Z" />
+                {/* New Zealand */}
+                <ellipse cx="372" cy="298" rx="7" ry="13" transform="rotate(-18 372 298)" />
               </g>
 
-              {/* Network nodes */}
-              <g filter="url(#glow3d)">
-                <circle cx="200" cy="200" r="5.5" fill="#60a5fa" />
-                <circle cx="143" cy="146" r="5" fill="#38bdf8" />
-                <circle cx="267" cy="160" r="5" fill="#38bdf8" />
-                <circle cx="130" cy="250" r="4.5" fill="#7dd3fc" />
-                <circle cx="280" cy="247" r="4.5" fill="#7dd3fc" />
-                <circle cx="200" cy="100" r="4" fill="#93c5fd" />
-                <circle cx="96" cy="193" r="4" fill="#bae6fd" />
-                <circle cx="312" cy="200" r="4" fill="#bae6fd" />
-                <circle cx="316" cy="148" r="3.5" fill="#7dd3fc" />
-                <circle cx="85" cy="156" r="3.5" fill="#7dd3fc" />
+              {/* Arc lines — world cities → Japan (Tokyo ~320,158) */}
+              <g clipPath="url(#globeClip)" filter="url(#arcglow)">
+                {/* New York */}
+                <path d="M 108,170 Q 215,62 320,158" fill="none" stroke="#38bdf8" strokeWidth="1.3" strokeOpacity="0.7" strokeDasharray="8 290">
+                  <animate attributeName="stroke-dashoffset" from="290" to="-10" dur="3.8s" repeatCount="indefinite" />
+                </path>
+                {/* London */}
+                <path d="M 192,116 Q 262,60 320,158" fill="none" stroke="#60a5fa" strokeWidth="1.2" strokeOpacity="0.65" strokeDasharray="7 195">
+                  <animate attributeName="stroke-dashoffset" from="195" to="-10" dur="2.9s" repeatCount="indefinite" begin="0.7s" />
+                </path>
+                {/* Dubai */}
+                <path d="M 230,158 Q 282,112 320,158" fill="none" stroke="#7dd3fc" strokeWidth="1.1" strokeOpacity="0.68" strokeDasharray="6 130">
+                  <animate attributeName="stroke-dashoffset" from="130" to="-10" dur="2.1s" repeatCount="indefinite" begin="1.4s" />
+                </path>
+                {/* Mumbai */}
+                <path d="M 252,190 Q 295,132 320,158" fill="none" stroke="#38bdf8" strokeWidth="1.1" strokeOpacity="0.65" strokeDasharray="6 135">
+                  <animate attributeName="stroke-dashoffset" from="135" to="-10" dur="2.3s" repeatCount="indefinite" begin="0.3s" />
+                </path>
+                {/* Vietnam / SE Asia */}
+                <path d="M 282,197 Q 304,168 320,158" fill="none" stroke="#93c5fd" strokeWidth="1.0" strokeOpacity="0.72" strokeDasharray="5 95">
+                  <animate attributeName="stroke-dashoffset" from="95" to="-8" dur="1.6s" repeatCount="indefinite" begin="0.5s" />
+                </path>
+                {/* Sydney */}
+                <path d="M 322,268 Q 332,195 320,158" fill="none" stroke="#38bdf8" strokeWidth="1.2" strokeOpacity="0.65" strokeDasharray="6 125">
+                  <animate attributeName="stroke-dashoffset" from="125" to="-10" dur="2.2s" repeatCount="indefinite" begin="1.8s" />
+                </path>
+                {/* São Paulo */}
+                <path d="M 130,282 Q 228,78 320,158" fill="none" stroke="#60a5fa" strokeWidth="1.0" strokeOpacity="0.55" strokeDasharray="6 340">
+                  <animate attributeName="stroke-dashoffset" from="340" to="-10" dur="4.5s" repeatCount="indefinite" begin="2.2s" />
+                </path>
+                {/* Seoul */}
+                <path d="M 305,150 Q 313,140 320,158" fill="none" stroke="#bae6fd" strokeWidth="1.0" strokeOpacity="0.75" strokeDasharray="4 65">
+                  <animate attributeName="stroke-dashoffset" from="65" to="-8" dur="1.1s" repeatCount="indefinite" begin="0.2s" />
+                </path>
               </g>
 
-              {/* Connection lines */}
-              <g filter="url(#softglow3d)" stroke="#38bdf8" strokeWidth="1.4" fill="none">
-                <line x1="200" y1="200" x2="143" y2="146" strokeDasharray="4,3" strokeOpacity="0.7">
-                  <animate attributeName="strokeOpacity" values="0.7;0.15;0.7" dur="2.5s" repeatCount="indefinite" />
-                </line>
-                <line x1="200" y1="200" x2="267" y2="160" strokeDasharray="4,3" strokeOpacity="0.5">
-                  <animate attributeName="strokeOpacity" values="0.1;0.7;0.1" dur="2.8s" repeatCount="indefinite" />
-                </line>
-                <line x1="200" y1="200" x2="130" y2="250" strokeDasharray="4,3" strokeOpacity="0.6">
-                  <animate attributeName="strokeOpacity" values="0.6;0.1;0.6" dur="3.2s" repeatCount="indefinite" />
-                </line>
-                <line x1="200" y1="200" x2="280" y2="247" strokeDasharray="4,3" strokeOpacity="0.5">
-                  <animate attributeName="strokeOpacity" values="0.1;0.65;0.1" dur="2.2s" repeatCount="indefinite" />
-                </line>
-                <line x1="200" y1="200" x2="200" y2="100" strokeDasharray="4,3" strokeOpacity="0.6">
-                  <animate attributeName="strokeOpacity" values="0.55;0.1;0.55" dur="3.5s" repeatCount="indefinite" />
-                </line>
-                <line x1="200" y1="200" x2="96" y2="193" strokeDasharray="4,3" strokeOpacity="0.5">
-                  <animate attributeName="strokeOpacity" values="0.1;0.6;0.1" dur="2s" repeatCount="indefinite" />
-                </line>
-                <line x1="200" y1="200" x2="312" y2="200" strokeDasharray="4,3" strokeOpacity="0.5">
-                  <animate attributeName="strokeOpacity" values="0.5;0.1;0.5" dur="3s" repeatCount="indefinite" />
-                </line>
-                <line x1="143" y1="146" x2="267" y2="160" strokeDasharray="3,4" strokeOpacity="0.35">
-                  <animate attributeName="strokeOpacity" values="0.35;0.05;0.35" dur="4s" repeatCount="indefinite" />
-                </line>
-                <line x1="130" y1="250" x2="280" y2="247" strokeDasharray="3,4" strokeOpacity="0.35">
-                  <animate attributeName="strokeOpacity" values="0.05;0.35;0.05" dur="3.8s" repeatCount="indefinite" />
-                </line>
-                <line x1="85" y1="156" x2="143" y2="146" strokeDasharray="3,4" strokeOpacity="0.3">
-                  <animate attributeName="strokeOpacity" values="0.3;0.05;0.3" dur="4.5s" repeatCount="indefinite" />
-                </line>
-                <line x1="316" y1="148" x2="267" y2="160" strokeDasharray="3,4" strokeOpacity="0.3">
-                  <animate attributeName="strokeOpacity" values="0.05;0.3;0.05" dur="4.2s" repeatCount="indefinite" />
-                </line>
+              {/* Source city dots */}
+              <g filter="url(#glow3d)" clipPath="url(#globeClip)">
+                <circle cx="108" cy="170" r="3.5" fill="#7dd3fc" />
+                <circle cx="192" cy="116" r="3" fill="#7dd3fc" />
+                <circle cx="230" cy="158" r="3" fill="#7dd3fc" />
+                <circle cx="252" cy="190" r="3" fill="#7dd3fc" />
+                <circle cx="282" cy="197" r="2.5" fill="#93c5fd" />
+                <circle cx="322" cy="268" r="3" fill="#7dd3fc" />
+                <circle cx="130" cy="282" r="2.5" fill="#7dd3fc" />
+                <circle cx="305" cy="150" r="2.5" fill="#93c5fd" />
               </g>
 
-              {/* Border */}
-              <circle cx="200" cy="200" r="170" fill="none" stroke="#29b5e8" strokeOpacity="0.5" strokeWidth="1.5" />
-              {/* Highlight */}
-              <ellipse cx="150" cy="136" rx="60" ry="40" fill="white" fillOpacity="0.07" transform="rotate(-20 150 136)" />
-              {/* Pulse */}
-              <circle cx="200" cy="200" r="8" fill="none" stroke="#60a5fa" strokeWidth="1.2">
-                <animate attributeName="r" values="8;26;8" dur="2.5s" repeatCount="indefinite" />
-                <animate attributeName="strokeOpacity" values="0.7;0;0.7" dur="2.5s" repeatCount="indefinite" />
+              {/* Japan hub glow area */}
+              <circle cx="320" cy="158" r="24" fill="#3b82f6" fillOpacity="0.14" clipPath="url(#globeClip)" />
+
+              {/* Japan (Tokyo) — hub dot */}
+              <circle cx="320" cy="158" r="6.5" fill="#60a5fa" filter="url(#glow3d)" clipPath="url(#globeClip)">
+                <animate attributeName="opacity" values="1;0.55;1" dur="2s" repeatCount="indefinite" />
               </circle>
-              <circle cx="200" cy="200" r="5.5" fill="#60a5fa" filter="url(#glow3d)">
-                <animate attributeName="opacity" values="1;0.5;1" dur="1.5s" repeatCount="indefinite" />
+              {/* Japan pulse ring 1 */}
+              <circle cx="320" cy="158" r="9" fill="none" stroke="#60a5fa" strokeWidth="1.5" clipPath="url(#globeClip)">
+                <animate attributeName="r" values="9;25;9" dur="2.8s" repeatCount="indefinite" />
+                <animate attributeName="stroke-opacity" values="0.8;0;0.8" dur="2.8s" repeatCount="indefinite" />
               </circle>
+              {/* Japan pulse ring 2 */}
+              <circle cx="320" cy="158" r="9" fill="none" stroke="#60a5fa" strokeWidth="0.8" clipPath="url(#globeClip)">
+                <animate attributeName="r" values="9;18;9" dur="2.8s" repeatCount="indefinite" begin="1.4s" />
+                <animate attributeName="stroke-opacity" values="0.6;0;0.6" dur="2.8s" repeatCount="indefinite" begin="1.4s" />
+              </circle>
+
+              {/* Globe rim */}
+              <circle cx="200" cy="200" r="170" fill="none" stroke="#29b5e8" strokeOpacity="0.40" strokeWidth="1.2" />
+              {/* Light highlight */}
+              <ellipse cx="148" cy="136" rx="64" ry="44" fill="white" fillOpacity="0.055" transform="rotate(-22 148 136)" />
             </svg>
           </div>
         </div>
