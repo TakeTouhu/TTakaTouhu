@@ -1,6 +1,4 @@
-import Image from 'next/image';
-
-// SVG mark — used on dark backgrounds (footer, hero) where PNG logo won't work
+// SVG mark — used on dark/light backgrounds
 export function VTaMarkIcon({ className = 'w-10 h-10' }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 110 82" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -11,17 +9,16 @@ export function VTaMarkIcon({ className = 'w-10 h-10' }: { className?: string })
   );
 }
 
-// Header logo — uses the actual PNG (light background)
+// Header logo — SVG mark + dark text (light background)
 export function LogoHeader() {
   return (
-    <Image
-      src="/logo.png"
-      alt="VTaBridge"
-      width={180}
-      height={52}
-      className="h-10 w-auto object-contain"
-      priority
-    />
+    <div className="flex items-center gap-2.5">
+      <VTaMarkIcon className="h-10 w-auto" />
+      <div className="leading-none">
+        <div className="font-black text-xl tracking-tight text-blue-800">VTaBridge</div>
+        <div className="text-[10px] text-blue-500 mt-0.5 whitespace-nowrap">世界の優秀なエンジニアと日本企業をつなぐ</div>
+      </div>
+    </div>
   );
 }
 
