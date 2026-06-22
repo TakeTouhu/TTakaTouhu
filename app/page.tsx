@@ -94,56 +94,178 @@ export default function Home() {
             <div className="absolute top-10 right-10 w-96 h-96 bg-blue-500 rounded-full blur-3xl" />
             <div className="absolute bottom-0 left-20 w-64 h-64 bg-indigo-400 rounded-full blur-3xl" />
           </div>
-          <div className="relative max-w-3xl">
-            <div className="inline-flex items-center gap-2 bg-blue-600/30 border border-blue-500/40 rounded-full px-4 py-1.5 text-sm text-blue-300 mb-8">
-              <span className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
-              {t('グローバルエンジニア・リソースプロバイダー', 'Global Engineer Resource Provider')}
-            </div>
-            <h1 className="text-5xl md:text-6xl font-black leading-tight mb-4">
-              {lang === 'en' ? (
-                <><span className="text-blue-400">Global Engineers,</span><br />Ready to Deliver.</>
-              ) : (
-                <>海外エンジニア採用を、<br /><span className="text-blue-400">もっとシンプルに。</span></>
-              )}
-            </h1>
-            <p className="text-blue-300 text-lg mb-6 font-medium">
-              {t(
-                '世界の優秀なエンジニアと日本企業をつなぐ架け橋に。',
-                'The bridge connecting world-class engineers with Japanese companies.'
-              )}
-            </p>
-            <p className="text-xl text-slate-300 leading-relaxed mb-10 max-w-2xl">
-              {t(
-                'IT人材不足・DX推進でお悩みの企業へ。海外の高スキルエンジニアをフリーランス契約で週単位からご提供。採用コスト・手間なしで即戦力エンジニアを活用できます。',
-                'VTaBridge connects Japanese companies with highly skilled overseas engineers through B2B coordination. No hiring costs, no employment risk — just the talent you need, when you need it.'
-              )}
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link
-                href="/contact"
-                className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl font-bold text-lg transition-colors shadow-lg shadow-blue-900/50"
-              >
-                {t('無料相談を申し込む', 'Get a Free Consultation')}
-              </Link>
-              <Link
-                href="/services"
-                className="border border-slate-500 hover:border-slate-300 text-slate-300 hover:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-colors"
-              >
-                {t('事業内容を見る', 'View Services')}
-              </Link>
-            </div>
-          </div>
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-sm">
-            {[
-              { value: t('週単位', 'Within weeks'), label: t('マッチングスピード', 'Matching Speed') },
-              { value: '¥0', label: t('採用コスト', 'Hiring Cost') },
-              { value: '4', label: t('対応サービス', 'Core Services') },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-3xl font-bold text-blue-400 mb-1">{stat.value}</div>
-                <div className="text-xs text-slate-400">{stat.label}</div>
+          <div className="relative flex flex-col lg:flex-row items-center gap-12">
+            {/* Left: text */}
+            <div className="flex-1">
+              <div className="inline-flex items-center gap-2 bg-blue-600/30 border border-blue-500/40 rounded-full px-4 py-1.5 text-sm text-blue-300 mb-8">
+                <span className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
+                {t('グローバルエンジニア・リソースプロバイダー', 'Global Engineer Resource Provider')}
               </div>
-            ))}
+              <h1 className="text-5xl md:text-6xl font-black leading-tight mb-4">
+                {lang === 'en' ? (
+                  <><span className="text-blue-400">Global Engineers,</span><br />Ready to Deliver.</>
+                ) : (
+                  <>海外エンジニア採用を、<br /><span className="text-blue-400">もっとシンプルに。</span></>
+                )}
+              </h1>
+              <p className="text-blue-300 text-lg mb-6 font-medium">
+                {t(
+                  '世界の優秀なエンジニアと日本企業をつなぐ架け橋に。',
+                  'The bridge connecting world-class engineers with Japanese companies.'
+                )}
+              </p>
+              <p className="text-xl text-slate-300 leading-relaxed mb-10">
+                {t(
+                  'IT人材不足・DX推進でお悩みの企業へ。海外の高スキルエンジニアをフリーランス契約で週単位からご提供。採用コスト・手間なしで即戦力エンジニアを活用できます。',
+                  'VTaBridge connects Japanese companies with highly skilled overseas engineers through B2B coordination. No hiring costs, no employment risk — just the talent you need, when you need it.'
+                )}
+              </p>
+              <div className="flex flex-wrap gap-4 mb-12">
+                <Link
+                  href="/contact"
+                  className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl font-bold text-lg transition-colors shadow-lg shadow-blue-900/50"
+                >
+                  {t('無料相談を申し込む', 'Get a Free Consultation')}
+                </Link>
+                <Link
+                  href="/services"
+                  className="border border-slate-500 hover:border-slate-300 text-slate-300 hover:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-colors"
+                >
+                  {t('事業内容を見る', 'View Services')}
+                </Link>
+              </div>
+              <div className="grid grid-cols-3 gap-8 max-w-sm">
+                {[
+                  { value: t('週単位', 'Within weeks'), label: t('マッチングスピード', 'Matching Speed') },
+                  { value: '¥0', label: t('採用コスト', 'Hiring Cost') },
+                  { value: '3', label: t('対応サービス', 'Core Services') },
+                ].map((stat) => (
+                  <div key={stat.label} className="text-center">
+                    <div className="text-3xl font-bold text-blue-400 mb-1">{stat.value}</div>
+                    <div className="text-xs text-slate-400">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: Globe SVG */}
+            <div className="flex-shrink-0 w-80 h-80 lg:w-96 lg:h-96 relative hidden lg:block">
+              <svg viewBox="0 0 400 400" className="w-full h-full drop-shadow-2xl" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <radialGradient id="globeGrad" cx="38%" cy="35%" r="65%">
+                    <stop offset="0%" stopColor="#1e40af" stopOpacity="0.9" />
+                    <stop offset="50%" stopColor="#0f2a5e" stopOpacity="0.95" />
+                    <stop offset="100%" stopColor="#050d1f" stopOpacity="1" />
+                  </radialGradient>
+                  <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.3" />
+                    <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
+                  </radialGradient>
+                  <filter id="glow">
+                    <feGaussianBlur stdDeviation="3" result="blur" />
+                    <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                  </filter>
+                  <filter id="softglow">
+                    <feGaussianBlur stdDeviation="2" result="blur" />
+                    <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                  </filter>
+                  <clipPath id="globeClip">
+                    <circle cx="200" cy="200" r="168" />
+                  </clipPath>
+                </defs>
+
+                {/* Outer glow */}
+                <circle cx="200" cy="200" r="195" fill="url(#glowGrad)" />
+
+                {/* Globe body */}
+                <circle cx="200" cy="200" r="168" fill="url(#globeGrad)" />
+
+                {/* Latitude lines */}
+                <g clipPath="url(#globeClip)" stroke="#29b5e8" strokeOpacity="0.2" strokeWidth="0.8" fill="none">
+                  <ellipse cx="200" cy="200" rx="168" ry="30" />
+                  <ellipse cx="200" cy="200" rx="168" ry="70" />
+                  <ellipse cx="200" cy="200" rx="168" ry="120" />
+                  <ellipse cx="200" cy="200" rx="168" ry="155" />
+                  <line x1="32" y1="200" x2="368" y2="200" />
+                </g>
+
+                {/* Longitude lines */}
+                <g clipPath="url(#globeClip)" stroke="#29b5e8" strokeOpacity="0.2" strokeWidth="0.8" fill="none">
+                  <ellipse cx="200" cy="200" rx="30" ry="168" />
+                  <ellipse cx="200" cy="200" rx="80" ry="168" />
+                  <ellipse cx="200" cy="200" rx="140" ry="168" />
+                  <line x1="200" y1="32" x2="200" y2="368" />
+                </g>
+
+                {/* Continent-like shapes */}
+                <g clipPath="url(#globeClip)" fill="#1d4ed8" fillOpacity="0.35">
+                  <ellipse cx="160" cy="155" rx="45" ry="30" transform="rotate(-15 160 155)" />
+                  <ellipse cx="145" cy="215" rx="28" ry="40" transform="rotate(10 145 215)" />
+                  <ellipse cx="255" cy="170" rx="35" ry="22" transform="rotate(-5 255 170)" />
+                  <ellipse cx="270" cy="230" rx="20" ry="28" transform="rotate(8 270 230)" />
+                  <ellipse cx="200" cy="290" rx="18" ry="12" />
+                </g>
+
+                {/* Globe border */}
+                <circle cx="200" cy="200" r="168" fill="none" stroke="#29b5e8" strokeOpacity="0.5" strokeWidth="1.5" />
+
+                {/* Highlight */}
+                <ellipse cx="155" cy="140" rx="55" ry="35" fill="white" fillOpacity="0.06" transform="rotate(-20 155 140)" />
+
+                {/* Network nodes */}
+                <g filter="url(#glow)">
+                  <circle cx="200" cy="200" r="5" fill="#60a5fa" />
+                  <circle cx="145" cy="148" r="4" fill="#38bdf8" />
+                  <circle cx="265" cy="162" r="4" fill="#38bdf8" />
+                  <circle cx="132" cy="248" r="3.5" fill="#7dd3fc" />
+                  <circle cx="278" cy="245" r="3.5" fill="#7dd3fc" />
+                  <circle cx="200" cy="105" r="3" fill="#93c5fd" />
+                  <circle cx="185" cy="295" r="3" fill="#93c5fd" />
+                  <circle cx="100" cy="195" r="3" fill="#bae6fd" />
+                  <circle cx="308" cy="200" r="3" fill="#bae6fd" />
+                </g>
+
+                {/* Network connection lines */}
+                <g filter="url(#softglow)" stroke="#38bdf8" strokeOpacity="0.7" strokeWidth="1.2" fill="none">
+                  <line x1="200" y1="200" x2="145" y2="148" strokeDasharray="4,3">
+                    <animate attributeName="strokeOpacity" values="0.7;0.2;0.7" dur="2.5s" repeatCount="indefinite" />
+                  </line>
+                  <line x1="200" y1="200" x2="265" y2="162" strokeDasharray="4,3">
+                    <animate attributeName="strokeOpacity" values="0.2;0.7;0.2" dur="2.8s" repeatCount="indefinite" />
+                  </line>
+                  <line x1="200" y1="200" x2="132" y2="248" strokeDasharray="4,3">
+                    <animate attributeName="strokeOpacity" values="0.7;0.3;0.7" dur="3.2s" repeatCount="indefinite" />
+                  </line>
+                  <line x1="200" y1="200" x2="278" y2="245" strokeDasharray="4,3">
+                    <animate attributeName="strokeOpacity" values="0.3;0.7;0.3" dur="2.2s" repeatCount="indefinite" />
+                  </line>
+                  <line x1="200" y1="200" x2="200" y2="105" strokeDasharray="4,3">
+                    <animate attributeName="strokeOpacity" values="0.6;0.1;0.6" dur="3.5s" repeatCount="indefinite" />
+                  </line>
+                  <line x1="200" y1="200" x2="100" y2="195" strokeDasharray="4,3">
+                    <animate attributeName="strokeOpacity" values="0.1;0.6;0.1" dur="2s" repeatCount="indefinite" />
+                  </line>
+                  <line x1="200" y1="200" x2="308" y2="200" strokeDasharray="4,3">
+                    <animate attributeName="strokeOpacity" values="0.5;0.1;0.5" dur="3s" repeatCount="indefinite" />
+                  </line>
+                  <line x1="145" y1="148" x2="265" y2="162" strokeOpacity="0.4" strokeDasharray="3,4">
+                    <animate attributeName="strokeOpacity" values="0.4;0.1;0.4" dur="4s" repeatCount="indefinite" />
+                  </line>
+                  <line x1="132" y1="248" x2="278" y2="245" strokeOpacity="0.4" strokeDasharray="3,4">
+                    <animate attributeName="strokeOpacity" values="0.1;0.4;0.1" dur="3.8s" repeatCount="indefinite" />
+                  </line>
+                </g>
+
+                {/* Pulse rings on center node */}
+                <circle cx="200" cy="200" r="12" fill="none" stroke="#60a5fa" strokeOpacity="0.6" strokeWidth="1">
+                  <animate attributeName="r" values="8;22;8" dur="2.5s" repeatCount="indefinite" />
+                  <animate attributeName="strokeOpacity" values="0.6;0;0.6" dur="2.5s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="200" cy="200" r="5" fill="#60a5fa">
+                  <animate attributeName="opacity" values="1;0.5;1" dur="1.5s" repeatCount="indefinite" />
+                </circle>
+              </svg>
+            </div>
           </div>
         </div>
         <div className="h-16 bg-white [clip-path:ellipse(120%_100%_at_50%_100%)]" />
