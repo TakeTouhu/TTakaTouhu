@@ -92,9 +92,9 @@ export default function Home() {
         {/* Globe — absolutely positioned so it doesn't change hero height */}
         <div
           className="absolute right-0 top-0 bottom-0 hidden lg:flex items-center pointer-events-none"
-          style={{ perspective: '1100px', paddingRight: '2rem' }}
+          style={{ perspective: '1400px', paddingRight: '0', marginRight: '-80px' }}
         >
-          <svg width="600" height="600" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-2xl">
+          <svg width="860" height="860" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-2xl">
             <defs>
               <radialGradient id="globeGrad" cx="38%" cy="35%" r="65%">
                 <stop offset="0%" stopColor="#1e40af" stopOpacity="0.9" />
