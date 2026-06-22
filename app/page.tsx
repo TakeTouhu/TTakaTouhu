@@ -1,6 +1,9 @@
 'use client';
 import Link from 'next/link';
 import { useLanguage } from '@/components/LanguageProvider';
+import dynamic from 'next/dynamic';
+
+const Globe3D = dynamic(() => import('@/components/Globe3D'), { ssr: false });
 
 const services = {
   ja: [
@@ -89,162 +92,12 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       {/* Hero */}
       <section className="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white overflow-hidden relative">
-        {/* Globe — Earth with arcs converging to Japan */}
+        {/* 3D Globe — Three.js, Earth with arcs converging to Japan */}
         <div
-          className="absolute right-0 top-0 bottom-0 hidden lg:flex items-center pointer-events-none"
-          style={{ perspective: '1600px', marginRight: '-180px' }}
+          className="absolute right-0 top-0 bottom-0 hidden lg:block pointer-events-none"
+          style={{ width: '580px', marginRight: '-160px' }}
         >
-          <div style={{ animation: 'globeYSpin 40s linear infinite', flexShrink: 0 }}>
-            <svg width="1100" height="1100" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <radialGradient id="globeGrad" cx="38%" cy="34%" r="65%">
-                  <stop offset="0%" stopColor="#1e40af" stopOpacity="0.90" />
-                  <stop offset="50%" stopColor="#0f2a5e" stopOpacity="0.96" />
-                  <stop offset="100%" stopColor="#020b1f" stopOpacity="1" />
-                </radialGradient>
-                <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.40" />
-                  <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
-                </radialGradient>
-                <filter id="glow3d">
-                  <feGaussianBlur stdDeviation="3" result="blur" />
-                  <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-                </filter>
-                <filter id="arcglow">
-                  <feGaussianBlur stdDeviation="2.5" result="blur" />
-                  <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-                </filter>
-                <clipPath id="globeClip">
-                  <circle cx="200" cy="200" r="170" />
-                </clipPath>
-                <style>{`
-                  @keyframes globeYSpin {
-                    from { transform: rotateY(0deg); }
-                    to   { transform: rotateY(360deg); }
-                  }
-                `}</style>
-              </defs>
-
-              {/* Atmospheric glow */}
-              <circle cx="200" cy="200" r="200" fill="url(#glowGrad)" />
-              {/* Ocean */}
-              <circle cx="200" cy="200" r="170" fill="url(#globeGrad)" />
-
-              {/* Lat/Lon grid */}
-              <g clipPath="url(#globeClip)" stroke="#29b5e8" strokeOpacity="0.12" strokeWidth="0.6" fill="none">
-                <ellipse cx="200" cy="200" rx="170" ry="28" />
-                <ellipse cx="200" cy="200" rx="170" ry="70" />
-                <ellipse cx="200" cy="200" rx="170" ry="120" />
-                <ellipse cx="200" cy="200" rx="170" ry="155" />
-                <line x1="30" y1="200" x2="370" y2="200" />
-                <ellipse cx="200" cy="200" rx="30" ry="170" />
-                <ellipse cx="200" cy="200" rx="82" ry="170" />
-                <ellipse cx="200" cy="200" rx="140" ry="170" />
-                <line x1="200" y1="30" x2="200" y2="370" />
-              </g>
-
-              {/* Continents — simplified Earth shapes */}
-              <g clipPath="url(#globeClip)" fill="#2563eb" fillOpacity="0.52" stroke="#3b82f6" strokeOpacity="0.25" strokeWidth="0.5">
-                {/* North America */}
-                <path d="M 65,118 C 72,88 108,80 130,95 L 150,115 L 162,145 L 165,175 L 150,210 L 130,226 L 102,220 L 76,200 L 58,168 L 55,140 Z" />
-                {/* Greenland */}
-                <ellipse cx="148" cy="85" rx="19" ry="15" transform="rotate(-12 148 85)" />
-                {/* South America */}
-                <path d="M 115,230 C 130,220 155,222 160,240 L 162,265 L 155,295 L 140,318 L 118,308 L 107,282 L 105,255 Z" />
-                {/* Europe */}
-                <path d="M 174,105 L 198,97 L 216,105 L 218,120 L 208,130 L 196,135 L 182,128 L 174,116 Z" />
-                {/* Scandinavia */}
-                <ellipse cx="198" cy="88" rx="10" ry="14" transform="rotate(-8 198 88)" />
-                {/* Africa */}
-                <path d="M 182,148 C 200,138 222,142 230,155 L 235,182 L 230,220 L 220,252 L 205,268 L 190,258 L 182,225 L 176,190 Z" />
-                {/* Asia mainland */}
-                <path d="M 216,108 L 258,94 L 302,97 L 338,114 L 346,140 L 342,164 L 320,174 L 294,170 L 270,180 L 248,186 L 228,180 L 218,160 L 212,135 Z" />
-                {/* India */}
-                <path d="M 246,174 L 260,170 L 268,180 L 264,205 L 252,218 L 240,207 L 238,188 Z" />
-                {/* Southeast Asia */}
-                <ellipse cx="286" cy="194" rx="20" ry="13" transform="rotate(-5 286 194)" />
-                {/* Japan — Honshu */}
-                <ellipse cx="323" cy="152" rx="9" ry="16" transform="rotate(18 323 152)" />
-                {/* Japan — Kyushu */}
-                <ellipse cx="316" cy="172" rx="5" ry="8" transform="rotate(22 316 172)" />
-                {/* Australia */}
-                <path d="M 290,245 C 315,235 350,240 360,260 L 360,286 L 346,300 L 318,304 L 292,292 L 283,268 Z" />
-                {/* New Zealand */}
-                <ellipse cx="372" cy="298" rx="7" ry="13" transform="rotate(-18 372 298)" />
-              </g>
-
-              {/* Arc lines — world cities → Japan (Tokyo ~320,158) */}
-              <g clipPath="url(#globeClip)" filter="url(#arcglow)">
-                {/* New York */}
-                <path d="M 108,170 Q 215,62 320,158" fill="none" stroke="#38bdf8" strokeWidth="1.3" strokeOpacity="0.7" strokeDasharray="8 290">
-                  <animate attributeName="stroke-dashoffset" from="290" to="-10" dur="3.8s" repeatCount="indefinite" />
-                </path>
-                {/* London */}
-                <path d="M 192,116 Q 262,60 320,158" fill="none" stroke="#60a5fa" strokeWidth="1.2" strokeOpacity="0.65" strokeDasharray="7 195">
-                  <animate attributeName="stroke-dashoffset" from="195" to="-10" dur="2.9s" repeatCount="indefinite" begin="0.7s" />
-                </path>
-                {/* Dubai */}
-                <path d="M 230,158 Q 282,112 320,158" fill="none" stroke="#7dd3fc" strokeWidth="1.1" strokeOpacity="0.68" strokeDasharray="6 130">
-                  <animate attributeName="stroke-dashoffset" from="130" to="-10" dur="2.1s" repeatCount="indefinite" begin="1.4s" />
-                </path>
-                {/* Mumbai */}
-                <path d="M 252,190 Q 295,132 320,158" fill="none" stroke="#38bdf8" strokeWidth="1.1" strokeOpacity="0.65" strokeDasharray="6 135">
-                  <animate attributeName="stroke-dashoffset" from="135" to="-10" dur="2.3s" repeatCount="indefinite" begin="0.3s" />
-                </path>
-                {/* Vietnam / SE Asia */}
-                <path d="M 282,197 Q 304,168 320,158" fill="none" stroke="#93c5fd" strokeWidth="1.0" strokeOpacity="0.72" strokeDasharray="5 95">
-                  <animate attributeName="stroke-dashoffset" from="95" to="-8" dur="1.6s" repeatCount="indefinite" begin="0.5s" />
-                </path>
-                {/* Sydney */}
-                <path d="M 322,268 Q 332,195 320,158" fill="none" stroke="#38bdf8" strokeWidth="1.2" strokeOpacity="0.65" strokeDasharray="6 125">
-                  <animate attributeName="stroke-dashoffset" from="125" to="-10" dur="2.2s" repeatCount="indefinite" begin="1.8s" />
-                </path>
-                {/* São Paulo */}
-                <path d="M 130,282 Q 228,78 320,158" fill="none" stroke="#60a5fa" strokeWidth="1.0" strokeOpacity="0.55" strokeDasharray="6 340">
-                  <animate attributeName="stroke-dashoffset" from="340" to="-10" dur="4.5s" repeatCount="indefinite" begin="2.2s" />
-                </path>
-                {/* Seoul */}
-                <path d="M 305,150 Q 313,140 320,158" fill="none" stroke="#bae6fd" strokeWidth="1.0" strokeOpacity="0.75" strokeDasharray="4 65">
-                  <animate attributeName="stroke-dashoffset" from="65" to="-8" dur="1.1s" repeatCount="indefinite" begin="0.2s" />
-                </path>
-              </g>
-
-              {/* Source city dots */}
-              <g filter="url(#glow3d)" clipPath="url(#globeClip)">
-                <circle cx="108" cy="170" r="3.5" fill="#7dd3fc" />
-                <circle cx="192" cy="116" r="3" fill="#7dd3fc" />
-                <circle cx="230" cy="158" r="3" fill="#7dd3fc" />
-                <circle cx="252" cy="190" r="3" fill="#7dd3fc" />
-                <circle cx="282" cy="197" r="2.5" fill="#93c5fd" />
-                <circle cx="322" cy="268" r="3" fill="#7dd3fc" />
-                <circle cx="130" cy="282" r="2.5" fill="#7dd3fc" />
-                <circle cx="305" cy="150" r="2.5" fill="#93c5fd" />
-              </g>
-
-              {/* Japan hub glow area */}
-              <circle cx="320" cy="158" r="24" fill="#3b82f6" fillOpacity="0.14" clipPath="url(#globeClip)" />
-
-              {/* Japan (Tokyo) — hub dot */}
-              <circle cx="320" cy="158" r="6.5" fill="#60a5fa" filter="url(#glow3d)" clipPath="url(#globeClip)">
-                <animate attributeName="opacity" values="1;0.55;1" dur="2s" repeatCount="indefinite" />
-              </circle>
-              {/* Japan pulse ring 1 */}
-              <circle cx="320" cy="158" r="9" fill="none" stroke="#60a5fa" strokeWidth="1.5" clipPath="url(#globeClip)">
-                <animate attributeName="r" values="9;25;9" dur="2.8s" repeatCount="indefinite" />
-                <animate attributeName="stroke-opacity" values="0.8;0;0.8" dur="2.8s" repeatCount="indefinite" />
-              </circle>
-              {/* Japan pulse ring 2 */}
-              <circle cx="320" cy="158" r="9" fill="none" stroke="#60a5fa" strokeWidth="0.8" clipPath="url(#globeClip)">
-                <animate attributeName="r" values="9;18;9" dur="2.8s" repeatCount="indefinite" begin="1.4s" />
-                <animate attributeName="stroke-opacity" values="0.6;0;0.6" dur="2.8s" repeatCount="indefinite" begin="1.4s" />
-              </circle>
-
-              {/* Globe rim */}
-              <circle cx="200" cy="200" r="170" fill="none" stroke="#29b5e8" strokeOpacity="0.40" strokeWidth="1.2" />
-              {/* Light highlight */}
-              <ellipse cx="148" cy="136" rx="64" ry="44" fill="white" fillOpacity="0.055" transform="rotate(-22 148 136)" />
-            </svg>
-          </div>
+          <Globe3D />
         </div>
 
         <div className="max-w-6xl mx-auto px-6 pt-10 pb-12 relative">
