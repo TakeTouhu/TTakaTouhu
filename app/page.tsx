@@ -149,7 +149,7 @@ export default function Home() {
             </div>
 
             {/* Right: Globe SVG */}
-            <div className="flex-shrink-0 w-80 h-80 lg:w-96 lg:h-96 relative hidden lg:block">
+            <div className="flex-shrink-0 w-[420px] h-[420px] xl:w-[520px] xl:h-[520px] relative hidden lg:block">
               <svg viewBox="0 0 400 400" className="w-full h-full drop-shadow-2xl" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <radialGradient id="globeGrad" cx="38%" cy="35%" r="65%">
@@ -158,11 +158,11 @@ export default function Home() {
                     <stop offset="100%" stopColor="#050d1f" stopOpacity="1" />
                   </radialGradient>
                   <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.3" />
+                    <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.35" />
                     <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
                   </radialGradient>
                   <filter id="glow">
-                    <feGaussianBlur stdDeviation="3" result="blur" />
+                    <feGaussianBlur stdDeviation="3.5" result="blur" />
                     <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
                   </filter>
                   <filter id="softglow">
@@ -175,93 +175,107 @@ export default function Home() {
                 </defs>
 
                 {/* Outer glow */}
-                <circle cx="200" cy="200" r="195" fill="url(#glowGrad)" />
+                <circle cx="200" cy="200" r="198" fill="url(#glowGrad)" />
 
                 {/* Globe body */}
                 <circle cx="200" cy="200" r="168" fill="url(#globeGrad)" />
 
-                {/* Latitude lines */}
-                <g clipPath="url(#globeClip)" stroke="#29b5e8" strokeOpacity="0.2" strokeWidth="0.8" fill="none">
-                  <ellipse cx="200" cy="200" rx="168" ry="30" />
-                  <ellipse cx="200" cy="200" rx="168" ry="70" />
-                  <ellipse cx="200" cy="200" rx="168" ry="120" />
-                  <ellipse cx="200" cy="200" rx="168" ry="155" />
+                {/* Latitude lines — static */}
+                <g clipPath="url(#globeClip)" stroke="#29b5e8" strokeOpacity="0.18" strokeWidth="0.8" fill="none">
+                  <ellipse cx="200" cy="200" rx="168" ry="28" />
+                  <ellipse cx="200" cy="200" rx="168" ry="65" />
+                  <ellipse cx="200" cy="200" rx="168" ry="112" />
+                  <ellipse cx="200" cy="200" rx="168" ry="150" />
                   <line x1="32" y1="200" x2="368" y2="200" />
                 </g>
 
-                {/* Longitude lines */}
-                <g clipPath="url(#globeClip)" stroke="#29b5e8" strokeOpacity="0.2" strokeWidth="0.8" fill="none">
-                  <ellipse cx="200" cy="200" rx="30" ry="168" />
-                  <ellipse cx="200" cy="200" rx="80" ry="168" />
-                  <ellipse cx="200" cy="200" rx="140" ry="168" />
-                  <line x1="200" y1="32" x2="200" y2="368" />
+                {/* Rotating group: longitude lines + continents + nodes + connections */}
+                <g clipPath="url(#globeClip)">
+                  <animateTransform attributeName="transform" type="rotate" from="0 200 200" to="360 200 200" dur="30s" repeatCount="indefinite" />
+
+                  {/* Longitude lines */}
+                  <g stroke="#29b5e8" strokeOpacity="0.18" strokeWidth="0.8" fill="none">
+                    <ellipse cx="200" cy="200" rx="30" ry="168" />
+                    <ellipse cx="200" cy="200" rx="80" ry="168" />
+                    <ellipse cx="200" cy="200" rx="140" ry="168" />
+                    <line x1="200" y1="32" x2="200" y2="368" />
+                  </g>
+
+                  {/* Continent-like shapes */}
+                  <g fill="#2563eb" fillOpacity="0.4">
+                    <ellipse cx="155" cy="150" rx="48" ry="32" transform="rotate(-15 155 150)" />
+                    <ellipse cx="140" cy="218" rx="30" ry="42" transform="rotate(10 140 218)" />
+                    <ellipse cx="258" cy="165" rx="38" ry="24" transform="rotate(-5 258 165)" />
+                    <ellipse cx="272" cy="232" rx="22" ry="30" transform="rotate(8 272 232)" />
+                    <ellipse cx="200" cy="295" rx="20" ry="13" />
+                    <ellipse cx="310" cy="155" rx="15" ry="20" transform="rotate(-10 310 155)" />
+                  </g>
+
+                  {/* Network nodes */}
+                  <g filter="url(#glow)">
+                    <circle cx="200" cy="200" r="5" fill="#60a5fa" />
+                    <circle cx="145" cy="148" r="4.5" fill="#38bdf8" />
+                    <circle cx="265" cy="162" r="4.5" fill="#38bdf8" />
+                    <circle cx="132" cy="248" r="4" fill="#7dd3fc" />
+                    <circle cx="278" cy="245" r="4" fill="#7dd3fc" />
+                    <circle cx="200" cy="102" r="3.5" fill="#93c5fd" />
+                    <circle cx="185" cy="296" r="3.5" fill="#93c5fd" />
+                    <circle cx="98" cy="194" r="3.5" fill="#bae6fd" />
+                    <circle cx="310" cy="200" r="3.5" fill="#bae6fd" />
+                    <circle cx="312" cy="150" r="3" fill="#7dd3fc" />
+                    <circle cx="88" cy="155" r="3" fill="#7dd3fc" />
+                  </g>
+
+                  {/* Network connection lines */}
+                  <g filter="url(#softglow)" stroke="#38bdf8" strokeWidth="1.3" fill="none">
+                    <line x1="200" y1="200" x2="145" y2="148" strokeDasharray="4,3" strokeOpacity="0.7">
+                      <animate attributeName="strokeOpacity" values="0.7;0.15;0.7" dur="2.5s" repeatCount="indefinite" />
+                    </line>
+                    <line x1="200" y1="200" x2="265" y2="162" strokeDasharray="4,3" strokeOpacity="0.5">
+                      <animate attributeName="strokeOpacity" values="0.15;0.7;0.15" dur="2.8s" repeatCount="indefinite" />
+                    </line>
+                    <line x1="200" y1="200" x2="132" y2="248" strokeDasharray="4,3" strokeOpacity="0.6">
+                      <animate attributeName="strokeOpacity" values="0.6;0.15;0.6" dur="3.2s" repeatCount="indefinite" />
+                    </line>
+                    <line x1="200" y1="200" x2="278" y2="245" strokeDasharray="4,3" strokeOpacity="0.5">
+                      <animate attributeName="strokeOpacity" values="0.15;0.65;0.15" dur="2.2s" repeatCount="indefinite" />
+                    </line>
+                    <line x1="200" y1="200" x2="200" y2="102" strokeDasharray="4,3" strokeOpacity="0.6">
+                      <animate attributeName="strokeOpacity" values="0.55;0.1;0.55" dur="3.5s" repeatCount="indefinite" />
+                    </line>
+                    <line x1="200" y1="200" x2="98" y2="194" strokeDasharray="4,3" strokeOpacity="0.5">
+                      <animate attributeName="strokeOpacity" values="0.1;0.6;0.1" dur="2s" repeatCount="indefinite" />
+                    </line>
+                    <line x1="200" y1="200" x2="310" y2="200" strokeDasharray="4,3" strokeOpacity="0.5">
+                      <animate attributeName="strokeOpacity" values="0.5;0.1;0.5" dur="3s" repeatCount="indefinite" />
+                    </line>
+                    <line x1="145" y1="148" x2="265" y2="162" strokeDasharray="3,4" strokeOpacity="0.35">
+                      <animate attributeName="strokeOpacity" values="0.35;0.08;0.35" dur="4s" repeatCount="indefinite" />
+                    </line>
+                    <line x1="132" y1="248" x2="278" y2="245" strokeDasharray="3,4" strokeOpacity="0.35">
+                      <animate attributeName="strokeOpacity" values="0.08;0.35;0.08" dur="3.8s" repeatCount="indefinite" />
+                    </line>
+                    <line x1="88" y1="155" x2="145" y2="148" strokeDasharray="3,4" strokeOpacity="0.3">
+                      <animate attributeName="strokeOpacity" values="0.3;0.08;0.3" dur="4.5s" repeatCount="indefinite" />
+                    </line>
+                    <line x1="312" y1="150" x2="265" y2="162" strokeDasharray="3,4" strokeOpacity="0.3">
+                      <animate attributeName="strokeOpacity" values="0.08;0.3;0.08" dur="4.2s" repeatCount="indefinite" />
+                    </line>
+                  </g>
                 </g>
 
-                {/* Continent-like shapes */}
-                <g clipPath="url(#globeClip)" fill="#1d4ed8" fillOpacity="0.35">
-                  <ellipse cx="160" cy="155" rx="45" ry="30" transform="rotate(-15 160 155)" />
-                  <ellipse cx="145" cy="215" rx="28" ry="40" transform="rotate(10 145 215)" />
-                  <ellipse cx="255" cy="170" rx="35" ry="22" transform="rotate(-5 255 170)" />
-                  <ellipse cx="270" cy="230" rx="20" ry="28" transform="rotate(8 270 230)" />
-                  <ellipse cx="200" cy="290" rx="18" ry="12" />
-                </g>
-
-                {/* Globe border */}
+                {/* Globe border — static */}
                 <circle cx="200" cy="200" r="168" fill="none" stroke="#29b5e8" strokeOpacity="0.5" strokeWidth="1.5" />
 
-                {/* Highlight */}
-                <ellipse cx="155" cy="140" rx="55" ry="35" fill="white" fillOpacity="0.06" transform="rotate(-20 155 140)" />
+                {/* Highlight — static */}
+                <ellipse cx="152" cy="138" rx="58" ry="38" fill="white" fillOpacity="0.07" transform="rotate(-20 152 138)" />
 
-                {/* Network nodes */}
-                <g filter="url(#glow)">
-                  <circle cx="200" cy="200" r="5" fill="#60a5fa" />
-                  <circle cx="145" cy="148" r="4" fill="#38bdf8" />
-                  <circle cx="265" cy="162" r="4" fill="#38bdf8" />
-                  <circle cx="132" cy="248" r="3.5" fill="#7dd3fc" />
-                  <circle cx="278" cy="245" r="3.5" fill="#7dd3fc" />
-                  <circle cx="200" cy="105" r="3" fill="#93c5fd" />
-                  <circle cx="185" cy="295" r="3" fill="#93c5fd" />
-                  <circle cx="100" cy="195" r="3" fill="#bae6fd" />
-                  <circle cx="308" cy="200" r="3" fill="#bae6fd" />
-                </g>
-
-                {/* Network connection lines */}
-                <g filter="url(#softglow)" stroke="#38bdf8" strokeOpacity="0.7" strokeWidth="1.2" fill="none">
-                  <line x1="200" y1="200" x2="145" y2="148" strokeDasharray="4,3">
-                    <animate attributeName="strokeOpacity" values="0.7;0.2;0.7" dur="2.5s" repeatCount="indefinite" />
-                  </line>
-                  <line x1="200" y1="200" x2="265" y2="162" strokeDasharray="4,3">
-                    <animate attributeName="strokeOpacity" values="0.2;0.7;0.2" dur="2.8s" repeatCount="indefinite" />
-                  </line>
-                  <line x1="200" y1="200" x2="132" y2="248" strokeDasharray="4,3">
-                    <animate attributeName="strokeOpacity" values="0.7;0.3;0.7" dur="3.2s" repeatCount="indefinite" />
-                  </line>
-                  <line x1="200" y1="200" x2="278" y2="245" strokeDasharray="4,3">
-                    <animate attributeName="strokeOpacity" values="0.3;0.7;0.3" dur="2.2s" repeatCount="indefinite" />
-                  </line>
-                  <line x1="200" y1="200" x2="200" y2="105" strokeDasharray="4,3">
-                    <animate attributeName="strokeOpacity" values="0.6;0.1;0.6" dur="3.5s" repeatCount="indefinite" />
-                  </line>
-                  <line x1="200" y1="200" x2="100" y2="195" strokeDasharray="4,3">
-                    <animate attributeName="strokeOpacity" values="0.1;0.6;0.1" dur="2s" repeatCount="indefinite" />
-                  </line>
-                  <line x1="200" y1="200" x2="308" y2="200" strokeDasharray="4,3">
-                    <animate attributeName="strokeOpacity" values="0.5;0.1;0.5" dur="3s" repeatCount="indefinite" />
-                  </line>
-                  <line x1="145" y1="148" x2="265" y2="162" strokeOpacity="0.4" strokeDasharray="3,4">
-                    <animate attributeName="strokeOpacity" values="0.4;0.1;0.4" dur="4s" repeatCount="indefinite" />
-                  </line>
-                  <line x1="132" y1="248" x2="278" y2="245" strokeOpacity="0.4" strokeDasharray="3,4">
-                    <animate attributeName="strokeOpacity" values="0.1;0.4;0.1" dur="3.8s" repeatCount="indefinite" />
-                  </line>
-                </g>
-
-                {/* Pulse rings on center node */}
-                <circle cx="200" cy="200" r="12" fill="none" stroke="#60a5fa" strokeOpacity="0.6" strokeWidth="1">
-                  <animate attributeName="r" values="8;22;8" dur="2.5s" repeatCount="indefinite" />
-                  <animate attributeName="strokeOpacity" values="0.6;0;0.6" dur="2.5s" repeatCount="indefinite" />
+                {/* Pulse rings on center — static */}
+                <circle cx="200" cy="200" r="8" fill="none" stroke="#60a5fa" strokeWidth="1.2">
+                  <animate attributeName="r" values="8;24;8" dur="2.5s" repeatCount="indefinite" />
+                  <animate attributeName="strokeOpacity" values="0.7;0;0.7" dur="2.5s" repeatCount="indefinite" />
                 </circle>
-                <circle cx="200" cy="200" r="5" fill="#60a5fa">
+                <circle cx="200" cy="200" r="5" fill="#60a5fa" filter="url(#glow)">
                   <animate attributeName="opacity" values="1;0.5;1" dur="1.5s" repeatCount="indefinite" />
                 </circle>
               </svg>
