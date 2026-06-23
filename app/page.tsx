@@ -94,8 +94,8 @@ export default function Home() {
       <section className="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white overflow-hidden relative">
         {/* 3D Globe — Three.js, Earth with arcs converging to Japan */}
         <div
-          className="absolute right-0 top-0 bottom-0 hidden lg:block pointer-events-none"
-          style={{ width: '580px' }}
+          className="absolute right-0 top-1/2 -translate-y-1/2 hidden lg:block pointer-events-none"
+          style={{ width: '560px', height: '560px' }}
         >
           <Globe3D />
         </div>
