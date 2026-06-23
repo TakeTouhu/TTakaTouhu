@@ -16,6 +16,7 @@ export default function Services() {
           ),
           title: 'Overseas Engineer Outsourcing & Development',
           badge: null,
+          href: '/services/engineer-outsourcing',
           desc: 'We match your project with highly skilled overseas engineers through thorough requirements interviews. From candidate proposal and introductory meetings to contract management and weekly progress reporting, we handle everything end-to-end.',
           points: ['Requirements hearing & candidate proposal', 'Contract & NDA support', 'Working hours tracking & deliverable review', 'Weekly progress reporting'],
         },
@@ -28,6 +29,7 @@ export default function Services() {
           ),
           title: 'Contract Product Development',
           badge: null,
+          href: '/services/product-development',
           desc: 'We take on full-cycle product development as a contracted partner. From requirements definition and architecture design through implementation and delivery, our overseas engineering team builds your product to specification.',
           points: ['Requirements definition & technical design', 'Full-stack implementation', 'QA & testing', 'Delivery & post-launch support'],
         },
@@ -40,6 +42,7 @@ export default function Services() {
           ),
           title: 'Product Offering',
           badge: 'Coming Soon',
+          href: '/services/products',
           desc: 'We are developing our own SaaS and digital products to solve real business challenges. Details will be announced soon.',
           points: ['SaaS product development in progress', 'Details to be announced'],
         },
@@ -54,6 +57,7 @@ export default function Services() {
           ),
           title: '海外エンジニアの委託派遣・開発',
           badge: null,
+          href: '/services/engineer-outsourcing',
           desc: '要件ヒアリングをもとに、最適な海外エンジニアを選定・ご提案します。候補者提案・顔合わせ面談から契約管理・週次進捗報告まで、ワンストップで対応します。',
           points: ['要件ヒアリング・候補者提案', '契約・NDA締結サポート', '稼働時間管理・成果物レビュー', '週次進捗レポート'],
         },
@@ -66,6 +70,7 @@ export default function Services() {
           ),
           title: '受託プロダクト開発',
           badge: null,
+          href: '/services/product-development',
           desc: 'お客様のプロダクト開発を一括で請け負います。要件定義・設計から実装・納品まで、海外エンジニアチームが仕様に沿って開発を進めます。',
           points: ['要件定義・技術設計', 'フルスタック実装', 'QA・テスト', '納品・リリース後サポート'],
         },
@@ -78,6 +83,7 @@ export default function Services() {
           ),
           title: 'プロダクトの提供',
           badge: '準備中',
+          href: '/services/products',
           desc: '自社開発のSaaSやデジタルプロダクトを順次提供予定です。ビジネス課題を解決するサービスを鋭意開発中です。詳細は近日公開予定。',
           points: ['SaaSプロダクト開発中', '詳細は近日発表予定'],
         },
@@ -105,34 +111,42 @@ export default function Services() {
       <section className="py-20 px-6 bg-white">
         <div className="max-w-5xl mx-auto space-y-8">
           {services.map((s) => (
-            <div key={s.num} className="bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:border-blue-200 transition-colors">
-              <div className="flex flex-col md:flex-row gap-6">
-                <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-blue-700 rounded-2xl flex items-center justify-center text-white">
-                    {s.icon}
+            <Link key={s.num} href={s.href} className="block group">
+              <div className="bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:border-blue-300 hover:shadow-md transition-all">
+                <div className="flex flex-col md:flex-row gap-6">
+                  <div className="flex-shrink-0">
+                    <div className="w-16 h-16 bg-blue-700 group-hover:bg-blue-600 rounded-2xl flex items-center justify-center text-white transition-colors">
+                      {s.icon}
+                    </div>
                   </div>
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-3 flex-wrap">
-                    <span className="text-blue-600 font-mono font-bold text-sm">{s.num}</span>
-                    <h3 className="text-xl font-bold text-gray-900">{s.title}</h3>
-                    {s.badge && (
-                      <span className="bg-amber-100 text-amber-700 text-xs font-bold px-2.5 py-1 rounded-full border border-amber-200">
-                        {s.badge}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-gray-600 leading-relaxed mb-4">{s.desc}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {s.points.map((p) => (
-                      <span key={p} className="bg-blue-50 text-blue-700 text-xs font-medium px-3 py-1.5 rounded-full border border-blue-100">
-                        {p}
-                      </span>
-                    ))}
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-3 flex-wrap">
+                      <span className="text-blue-600 font-mono font-bold text-sm">{s.num}</span>
+                      <h3 className="text-xl font-bold text-gray-900">{s.title}</h3>
+                      {s.badge && (
+                        <span className="bg-amber-100 text-amber-700 text-xs font-bold px-2.5 py-1 rounded-full border border-amber-200">
+                          {s.badge}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-gray-600 leading-relaxed mb-4">{s.desc}</p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {s.points.map((p) => (
+                        <span key={p} className="bg-blue-50 text-blue-700 text-xs font-medium px-3 py-1.5 rounded-full border border-blue-100">
+                          {p}
+                        </span>
+                      ))}
+                    </div>
+                    <span className="inline-flex items-center gap-1 text-blue-600 font-semibold text-sm group-hover:gap-2 transition-all">
+                      {t('詳細を見る', 'View details')}
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </span>
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
