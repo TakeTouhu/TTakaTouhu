@@ -13,35 +13,29 @@ const services = {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
         </svg>
       ),
-      title: 'エンジニアマッチング',
-      desc: '案件要件をヒアリングし、最適な海外エンジニアを週単位でアサイン。スピーディなマッチングを実現します。',
+      title: '海外エンジニアの委託派遣・開発',
+      badge: null,
+      desc: '要件ヒアリングをもとに、最適な海外エンジニアを選定・ご提案します。候補者提案・顔合わせ面談から契約管理・週次進捗報告まで、ワンストップで対応します。',
     },
     {
       icon: (
         <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
         </svg>
       ),
-      title: '契約・稼働管理',
-      desc: '業務委託契約の締結サポートから稼働時間・成果物の確認・管理まで、ワンストップで対応します。',
+      title: '受託プロダクト開発',
+      badge: null,
+      desc: 'お客様のプロダクト開発を一括で請け負います。要件定義・設計から実装・納品まで、海外エンジニアチームが仕様に沿って開発を進めます。',
     },
     {
       icon: (
         <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10" />
         </svg>
       ),
-      title: '技術選定アドバイス',
-      desc: 'アプリ開発・Web構築等のスタックや開発手法に関するアドバイスを提供します。',
-    },
-    {
-      icon: (
-        <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-        </svg>
-      ),
-      title: 'オンボーディング支援',
-      desc: '日本企業とエンジニアの関係構築・コミュニケーション設計を支援し、スムーズなプロジェクト開始を実現。',
+      title: 'プロダクトの提供',
+      badge: '準備中',
+      desc: '自社開発のSaaSやデジタルプロダクトを順次提供予定です。ビジネス課題を解決するサービスを鋭意開発中です。詳細は近日公開予定。',
     },
   ],
   en: [
@@ -51,35 +45,29 @@ const services = {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
         </svg>
       ),
-      title: 'Engineer Matching',
-      desc: 'We listen to your project requirements and assign the best overseas engineers — often within a week.',
+      title: 'Overseas Engineer Outsourcing & Development',
+      badge: null,
+      desc: 'We match your project with highly skilled overseas engineers through thorough requirements interviews. From candidate proposal and introductory meetings to contract management and weekly progress reporting, we handle everything end-to-end.',
     },
     {
       icon: (
         <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
         </svg>
       ),
-      title: 'Contract & Operations',
-      desc: 'End-to-end support from contract signing to deliverable review and hours tracking. Fully managed.',
+      title: 'Contract Product Development',
+      badge: null,
+      desc: 'We take on full-cycle product development as a contracted partner. From requirements definition and architecture design through implementation and delivery, our overseas engineering team builds your product to specification.',
     },
     {
       icon: (
         <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10" />
         </svg>
       ),
-      title: 'Technical Advisory',
-      desc: 'Guidance on tech stack selection and development methodology for app and web projects.',
-    },
-    {
-      icon: (
-        <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-        </svg>
-      ),
-      title: 'Onboarding Support',
-      desc: 'We facilitate team integration and communication design between your company and engineers for a smooth launch.',
+      title: 'Product Offering',
+      badge: 'Coming Soon',
+      desc: 'We are developing our own SaaS and digital products to solve real business challenges. Details will be announced soon.',
     },
   ],
 };
@@ -230,13 +218,18 @@ export default function Home() {
               )}
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid md:grid-cols-3 gap-5">
             {serviceList.map((s) => (
               <div key={s.title} className="bg-white rounded-2xl p-6 border border-gray-100 hover:border-blue-200 hover:shadow-md transition-all group">
                 <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-700 mb-4 group-hover:bg-blue-700 group-hover:text-white transition-colors">
                   {s.icon}
                 </div>
-                <h3 className="font-bold text-gray-900 mb-2">{s.title}</h3>
+                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  <h3 className="font-bold text-gray-900">{s.title}</h3>
+                  {s.badge && (
+                    <span className="bg-amber-100 text-amber-700 text-xs font-bold px-2 py-0.5 rounded-full border border-amber-200">{s.badge}</span>
+                  )}
+                </div>
                 <p className="text-gray-500 text-sm leading-relaxed">{s.desc}</p>
               </div>
             ))}
