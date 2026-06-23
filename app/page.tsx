@@ -95,7 +95,7 @@ export default function Home() {
         {/* 3D Globe — Three.js, Earth with arcs converging to Japan */}
         <div
           className="absolute right-0 top-0 bottom-0 hidden lg:block pointer-events-none"
-          style={{ width: '580px', marginRight: '-160px' }}
+          style={{ width: '580px' }}
         >
           <Globe3D />
         </div>
