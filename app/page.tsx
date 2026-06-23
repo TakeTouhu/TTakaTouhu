@@ -95,7 +95,7 @@ export default function Home() {
         {/* 3D Globe — 620×620px square container, globe fits completely */}
         <div
           className="absolute right-8 top-1/2 hidden lg:block pointer-events-none"
-          style={{ width: '620px', height: '620px', transform: 'translateY(calc(-50% - 10px))' }}
+          style={{ width: '620px', height: '620px', transform: 'translateY(calc(-50% - 15px))' }}
         >
           <Globe3D />
         </div>
