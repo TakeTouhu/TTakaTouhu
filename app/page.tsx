@@ -94,8 +94,8 @@ export default function Home() {
       <section className="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white relative" style={{ minHeight: '660px' }}>
         {/* 3D Globe — 620×620px square container, globe fits completely */}
         <div
-          className="absolute right-8 top-1/2 -translate-y-1/2 hidden lg:block pointer-events-none"
-          style={{ width: '620px', height: '620px' }}
+          className="absolute right-8 top-1/2 hidden lg:block pointer-events-none"
+          style={{ width: '620px', height: '620px', transform: 'translateY(calc(-50% - 5px))' }}
         >
           <Globe3D />
         </div>
