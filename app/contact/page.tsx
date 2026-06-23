@@ -7,8 +7,8 @@ export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
 
   const serviceOptions = lang === 'en'
-    ? ['Engineer Matching', 'Contract & Operations Management', 'Technical Advisory', 'Onboarding Support', 'General inquiry']
-    : ['エンジニアマッチング', '契約・稼働管理', '技術選定アドバイス', 'オンボーディング支援', 'その他・一般的なお問い合わせ'];
+    ? ['Overseas Engineer Outsourcing & Development', 'Contract Product Development', 'Product Offering', 'General inquiry']
+    : ['海外エンジニアの委託派遣・開発', '受託プロダクト開発', 'プロダクトの提供', 'その他・一般的なお問い合わせ'];
 
   const infos = lang === 'en'
     ? [
