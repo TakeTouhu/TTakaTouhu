@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/authStore';
-import Image from 'next/image';
 
 const NAV_LINKS = [
   { href: '/engineer/dashboard', label: 'ダッシュボード' },
