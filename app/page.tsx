@@ -91,11 +91,11 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white overflow-hidden relative">
-        {/* 3D Globe — Three.js, Earth with arcs converging to Japan */}
+      <section className="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white relative" style={{ minHeight: '660px' }}>
+        {/* 3D Globe — 620×620px square container, globe fits completely */}
         <div
-          className="absolute right-0 top-0 bottom-0 hidden lg:block pointer-events-none"
-          style={{ width: '900px' }}
+          className="absolute right-8 top-1/2 -translate-y-1/2 hidden lg:block pointer-events-none"
+          style={{ width: '620px', height: '620px' }}
         >
           <Globe3D />
         </div>

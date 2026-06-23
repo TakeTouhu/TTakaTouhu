@@ -138,7 +138,7 @@ export default function Globe3D() {
 
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(42, W / H, 0.1, 100);
-      camera.position.z = 2.55;
+      camera.position.z = 2.8;
 
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       rendererRef = renderer;
