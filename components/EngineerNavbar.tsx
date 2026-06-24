@@ -2,19 +2,23 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/authStore';
-
-const NAV_LINKS = [
-  { href: '/engineer/dashboard', label: 'ダッシュボード' },
-  { href: '/engineer/jobs', label: '案件一覧' },
-  { href: '/engineer/applications', label: '立候補履歴' },
-  { href: '/engineer/profile', label: 'プロフィール' },
-  { href: '/engineer/skills', label: 'スキル' },
-];
+import { useT } from '@/hooks/useT';
+import LanguageToggle from '@/components/LanguageToggle';
 
 export default function EngineerNavbar() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuthStore();
+  const { t } = useT();
+  const n = t.nav.engineer;
+
+  const NAV_LINKS = [
+    { href: '/engineer/dashboard', label: n.dashboard },
+    { href: '/engineer/jobs', label: n.jobs },
+    { href: '/engineer/applications', label: n.applications },
+    { href: '/engineer/profile', label: n.profile },
+    { href: '/engineer/skills', label: n.skills },
+  ];
 
   const handleLogout = () => {
     logout();
@@ -27,7 +31,7 @@ export default function EngineerNavbar() {
         <Link href="/engineer/dashboard" className="flex items-center gap-2 shrink-0">
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">V</div>
           <span className="font-bold text-gray-900">VTa Platform</span>
-          <span className="text-xs text-blue-600 font-medium bg-blue-50 px-2 py-0.5 rounded">エンジニア</span>
+          <span className="text-xs text-blue-600 font-medium bg-blue-50 px-2 py-0.5 rounded">{n.badge}</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-1">
@@ -46,13 +50,14 @@ export default function EngineerNavbar() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <LanguageToggle />
           <span className="text-sm text-gray-500 hidden sm:block">{user?.email}</span>
           <button
             onClick={handleLogout}
             className="text-sm text-gray-600 hover:text-red-600 transition-colors px-3 py-1.5 rounded-lg hover:bg-red-50"
           >
-            ログアウト
+            {t.common.logout}
           </button>
         </div>
       </div>

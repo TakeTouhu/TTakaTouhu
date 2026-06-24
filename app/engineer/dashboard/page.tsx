@@ -5,9 +5,12 @@ import { useAuthStore } from '@/lib/authStore';
 import { db } from '@/lib/db';
 import { EngineerProfile, Job } from '@/lib/types';
 import SpecialtyBadge from '@/components/SpecialtyBadge';
+import { useT } from '@/hooks/useT';
 
 export default function EngineerDashboard() {
   const { user } = useAuthStore();
+  const { t } = useT();
+  const d = t.engineer.dashboard;
   const [profile, setProfile] = useState<EngineerProfile | null>(null);
   const [recentJobs, setRecentJobs] = useState<Job[]>([]);
   const [appCount, setAppCount] = useState(0);
@@ -29,9 +32,9 @@ export default function EngineerDashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            {profile?.name ? `${profile.name} さん、こんにちは` : 'ダッシュボード'}
+            {profile?.name ? `${profile.name}${d.greeting}` : d.title}
           </h1>
-          <p className="text-gray-500 mt-1">VTa Platform エンジニアポータル</p>
+          <p className="text-gray-500 mt-1">{d.subtitle}</p>
         </div>
       </div>
 
@@ -39,12 +42,10 @@ export default function EngineerDashboard() {
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 flex items-start gap-3">
           <span className="text-2xl">⚠️</span>
           <div>
-            <p className="font-medium text-amber-800">プロフィールを完成させましょう</p>
-            <p className="text-amber-700 text-sm mt-1">
-              企業があなたの情報を確認できるよう、プロフィール・スキル・実績を登録してください。
-            </p>
+            <p className="font-medium text-amber-800">{d.setupAlert}</p>
+            <p className="text-amber-700 text-sm mt-1">{d.setupAlertDesc}</p>
             <Link href="/engineer/profile" className="mt-2 inline-block text-sm font-medium text-amber-800 underline">
-              プロフィールを登録する →
+              {d.setupLink}
             </Link>
           </div>
         </div>
@@ -54,39 +55,39 @@ export default function EngineerDashboard() {
         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
           <div className="text-3xl mb-2">🎯</div>
           <div className="text-2xl font-bold text-gray-900">{profile?.skills.length ?? 0}</div>
-          <div className="text-gray-500 text-sm">登録スキル数</div>
+          <div className="text-gray-500 text-sm">{d.skills}</div>
           <Link href="/engineer/skills" className="mt-3 inline-block text-xs text-blue-600 hover:underline">
-            スキルを管理する →
+            {d.manageSkills}
           </Link>
         </div>
         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
           <div className="text-3xl mb-2">📋</div>
           <div className="text-2xl font-bold text-gray-900">{appCount}</div>
-          <div className="text-gray-500 text-sm">立候補中の案件</div>
+          <div className="text-gray-500 text-sm">{d.applications}</div>
           <Link href="/engineer/applications" className="mt-3 inline-block text-xs text-blue-600 hover:underline">
-            履歴を確認する →
+            {d.viewHistory}
           </Link>
         </div>
         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
           <div className="text-3xl mb-2">💼</div>
           <div className="text-2xl font-bold text-gray-900">{db.jobs.findActive().length}</div>
-          <div className="text-gray-500 text-sm">公開中の案件</div>
+          <div className="text-gray-500 text-sm">{d.activeJobs}</div>
           <Link href="/engineer/jobs" className="mt-3 inline-block text-xs text-blue-600 hover:underline">
-            案件を探す →
+            {d.findJobs}
           </Link>
         </div>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-bold text-gray-900">最新の案件</h2>
+          <h2 className="font-bold text-gray-900">{d.recentJobs}</h2>
           <Link href="/engineer/jobs" className="text-sm text-blue-600 hover:underline">
-            すべて見る →
+            {d.viewAll}
           </Link>
         </div>
         <div className="space-y-3">
           {recentJobs.length === 0 ? (
-            <p className="text-gray-500 text-sm">現在公開中の案件はありません</p>
+            <p className="text-gray-500 text-sm">{d.noJobs}</p>
           ) : (
             recentJobs.map(job => (
               <Link
@@ -97,7 +98,9 @@ export default function EngineerDashboard() {
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <div className="font-medium text-gray-900">{job.title}</div>
-                    <div className="text-sm text-gray-500 mt-1">期間: {job.period} | 開始: {job.startDate} | {job.headcount}名</div>
+                    <div className="text-sm text-gray-500 mt-1">
+                      {d.period}: {job.period} | {d.start}: {job.startDate} | {job.headcount}{t.engineer.jobs.headcountUnit}
+                    </div>
                   </div>
                   <div className="flex flex-wrap gap-1 shrink-0">
                     {job.specialties.slice(0, 2).map(s => (
@@ -112,13 +115,13 @@ export default function EngineerDashboard() {
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="font-bold text-gray-900 mb-4">クイックアクション</h2>
+        <h2 className="font-bold text-gray-900 mb-4">{d.quickActions}</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
-            { href: '/engineer/profile', icon: '👤', label: 'プロフィール編集' },
-            { href: '/engineer/skills', icon: '⚡', label: 'スキル管理' },
-            { href: '/engineer/jobs', icon: '🔍', label: '案件を探す' },
-            { href: '/engineer/applications', icon: '📝', label: '立候補履歴' },
+            { href: '/engineer/profile', icon: '👤', label: d.editProfile },
+            { href: '/engineer/skills', icon: '⚡', label: d.manageSkillsAction },
+            { href: '/engineer/jobs', icon: '🔍', label: d.findJobsAction },
+            { href: '/engineer/applications', icon: '📝', label: d.applicationHistory },
           ].map(item => (
             <Link
               key={item.href}

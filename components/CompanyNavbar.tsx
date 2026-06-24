@@ -2,18 +2,22 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/authStore';
-
-const NAV_LINKS = [
-  { href: '/company/dashboard', label: 'ダッシュボード' },
-  { href: '/company/engineers', label: 'エンジニア一覧' },
-  { href: '/company/jobs', label: '自社案件' },
-  { href: '/company/profile', label: '企業情報' },
-];
+import { useT } from '@/hooks/useT';
+import LanguageToggle from '@/components/LanguageToggle';
 
 export default function CompanyNavbar() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuthStore();
+  const { t } = useT();
+  const n = t.nav.company;
+
+  const NAV_LINKS = [
+    { href: '/company/dashboard', label: n.dashboard },
+    { href: '/company/engineers', label: n.engineers },
+    { href: '/company/jobs', label: n.jobs },
+    { href: '/company/profile', label: n.profile },
+  ];
 
   const handleLogout = () => {
     logout();
@@ -26,7 +30,7 @@ export default function CompanyNavbar() {
         <Link href="/company/dashboard" className="flex items-center gap-2 shrink-0">
           <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">V</div>
           <span className="font-bold text-gray-900">VTa Platform</span>
-          <span className="text-xs text-indigo-600 font-medium bg-indigo-50 px-2 py-0.5 rounded">企業</span>
+          <span className="text-xs text-indigo-600 font-medium bg-indigo-50 px-2 py-0.5 rounded">{n.badge}</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-1">
@@ -45,13 +49,14 @@ export default function CompanyNavbar() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <LanguageToggle />
           <span className="text-sm text-gray-500 hidden sm:block">{user?.email}</span>
           <button
             onClick={handleLogout}
             className="text-sm text-gray-600 hover:text-red-600 transition-colors px-3 py-1.5 rounded-lg hover:bg-red-50"
           >
-            ログアウト
+            {t.common.logout}
           </button>
         </div>
       </div>

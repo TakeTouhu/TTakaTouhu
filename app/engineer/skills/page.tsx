@@ -2,14 +2,17 @@
 import { useEffect, useState } from 'react';
 import { useAuthStore } from '@/lib/authStore';
 import { db } from '@/lib/db';
-import { Skill, SkillLevel, Specialty, SKILL_LEVEL_LABELS, SPECIALTY_LABELS, SPECIALTIES, EngineerProfile } from '@/lib/types';
+import { Skill, SkillLevel, Specialty, SPECIALTIES, EngineerProfile } from '@/lib/types';
 import SkillBadge from '@/components/SkillBadge';
 import SpecialtyBadge from '@/components/SpecialtyBadge';
+import { useT } from '@/hooks/useT';
 
 const LEVEL_OPTIONS: SkillLevel[] = ['beginner', 'intermediate', 'advanced', 'expert'];
 
 export default function EngineerSkillsPage() {
   const { user } = useAuthStore();
+  const { t } = useT();
+  const s = t.engineer.skills;
   const [skills, setSkills] = useState<Skill[]>([]);
   const [specialties, setSpecialties] = useState<Specialty[]>([]);
   const [newLang, setNewLang] = useState('');
@@ -51,14 +54,14 @@ export default function EngineerSkillsPage() {
   };
 
   const removeSkill = (id: string) => {
-    const updated = skills.filter(s => s.id !== id);
+    const updated = skills.filter(sk => sk.id !== id);
     setSkills(updated);
     save(updated, specialties);
   };
 
   const toggleSpecialty = (sp: Specialty) => {
     const updated = specialties.includes(sp)
-      ? specialties.filter(s => s !== sp)
+      ? specialties.filter(x => x !== sp)
       : [...specialties, sp];
     setSpecialties(updated);
     save(skills, updated);
@@ -67,12 +70,12 @@ export default function EngineerSkillsPage() {
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">スキル管理</h1>
-        <p className="text-gray-500 mt-1">使用できる言語・技術と得意分野を登録しましょう</p>
+        <h1 className="text-2xl font-bold text-gray-900">{s.title}</h1>
+        <p className="text-gray-500 mt-1">{s.subtitle}</p>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
-        <h2 className="font-semibold text-gray-900">スキル（言語・技術）を追加</h2>
+        <h2 className="font-semibold text-gray-900">{s.addSection}</h2>
         <div className="flex gap-3">
           <input
             type="text"
@@ -80,7 +83,7 @@ export default function EngineerSkillsPage() {
             onChange={e => setNewLang(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addSkill())}
             className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-            placeholder="例: React, Python, AWS"
+            placeholder={s.placeholder}
           />
           <select
             value={newLevel}
@@ -88,7 +91,7 @@ export default function EngineerSkillsPage() {
             className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
           >
             {LEVEL_OPTIONS.map(l => (
-              <option key={l} value={l}>{SKILL_LEVEL_LABELS[l]}</option>
+              <option key={l} value={l}>{t.skillLevel[l]}</option>
             ))}
           </select>
           <button
@@ -96,12 +99,12 @@ export default function EngineerSkillsPage() {
             onClick={addSkill}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
           >
-            追加
+            {t.common.add}
           </button>
         </div>
 
         {skills.length === 0 ? (
-          <p className="text-gray-400 text-sm">スキルがまだ登録されていません</p>
+          <p className="text-gray-400 text-sm">{s.noSkills}</p>
         ) : (
           <div className="flex flex-wrap gap-2">
             {skills.map(skill => (
@@ -111,7 +114,7 @@ export default function EngineerSkillsPage() {
                   type="button"
                   onClick={() => removeSkill(skill.id)}
                   className="text-gray-400 hover:text-red-500 text-xs opacity-0 group-hover:opacity-100 transition-opacity -ml-1"
-                  aria-label="削除"
+                  aria-label={t.common.delete}
                 >
                   ×
                 </button>
@@ -122,8 +125,8 @@ export default function EngineerSkillsPage() {
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
-        <h2 className="font-semibold text-gray-900">得意分野</h2>
-        <p className="text-sm text-gray-500">当てはまる分野をすべて選択してください</p>
+        <h2 className="font-semibold text-gray-900">{s.specialties}</h2>
+        <p className="text-sm text-gray-500">{s.specialtiesDesc}</p>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {SPECIALTIES.map(sp => (
             <button
@@ -144,7 +147,7 @@ export default function EngineerSkillsPage() {
 
       {saved && (
         <div className="fixed bottom-6 right-6 bg-green-600 text-white px-5 py-3 rounded-xl shadow-lg text-sm font-medium">
-          保存しました ✓
+          {s.savedToast}
         </div>
       )}
     </div>

@@ -2,11 +2,14 @@
 import { useEffect, useState } from 'react';
 import { useAuthStore } from '@/lib/authStore';
 import { db } from '@/lib/db';
-import { Job, Specialty, SPECIALTY_LABELS, SPECIALTIES } from '@/lib/types';
+import { Job, Specialty, SPECIALTIES } from '@/lib/types';
 import SpecialtyBadge from '@/components/SpecialtyBadge';
+import { useT } from '@/hooks/useT';
 
 export default function EngineerJobsPage() {
   const { user } = useAuthStore();
+  const { t } = useT();
+  const j = t.engineer.jobs;
   const [jobs, setJobs] = useState<Job[]>([]);
   const [filtered, setFiltered] = useState<Job[]>([]);
   const [search, setSearch] = useState('');
@@ -31,14 +34,14 @@ export default function EngineerJobsPage() {
     let result = jobs;
     if (search) {
       const q = search.toLowerCase();
-      result = result.filter(j =>
-        j.title.toLowerCase().includes(q) ||
-        j.description.toLowerCase().includes(q) ||
-        j.requiredSkills.some(s => s.toLowerCase().includes(q)),
+      result = result.filter(jb =>
+        jb.title.toLowerCase().includes(q) ||
+        jb.description.toLowerCase().includes(q) ||
+        jb.requiredSkills.some(s => s.toLowerCase().includes(q)),
       );
     }
     if (specialtyFilter) {
-      result = result.filter(j => j.specialties.includes(specialtyFilter));
+      result = result.filter(jb => jb.specialties.includes(specialtyFilter));
     }
     setFiltered(result);
   }, [search, specialtyFilter, jobs]);
@@ -59,14 +62,14 @@ export default function EngineerJobsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">案件一覧</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">{j.title}</h1>
 
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <input
           type="text"
           value={search}
           onChange={e => setSearch(e.target.value)}
-          placeholder="案件名・スキルで検索"
+          placeholder={j.searchPlaceholder}
           className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
         />
         <select
@@ -74,9 +77,9 @@ export default function EngineerJobsPage() {
           onChange={e => setSpecialtyFilter(e.target.value as Specialty | '')}
           className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
         >
-          <option value="">すべての分野</option>
+          <option value="">{j.allFields}</option>
           {SPECIALTIES.map(s => (
-            <option key={s} value={s}>{SPECIALTY_LABELS[s]}</option>
+            <option key={s} value={s}>{t.specialty[s]}</option>
           ))}
         </select>
       </div>
@@ -85,7 +88,7 @@ export default function EngineerJobsPage() {
         <div className="space-y-3">
           {filtered.length === 0 ? (
             <div className="bg-white rounded-xl p-8 text-center text-gray-500 border border-gray-100">
-              条件に合う案件が見つかりませんでした
+              {j.noResults}
             </div>
           ) : (
             filtered.map(job => (
@@ -100,7 +103,7 @@ export default function EngineerJobsPage() {
                   <div className="min-w-0">
                     <div className="font-medium text-gray-900 truncate">{job.title}</div>
                     <div className="text-sm text-gray-500 mt-1">
-                      期間: {job.period} · {job.headcount}名募集
+                      {j.period}: {job.period} · {job.headcount}{j.recruiting}
                     </div>
                     <div className="flex flex-wrap gap-1 mt-2">
                       {job.requiredSkills.slice(0, 3).map(s => (
@@ -109,7 +112,7 @@ export default function EngineerJobsPage() {
                     </div>
                   </div>
                   {appliedJobs.has(job.id) && (
-                    <span className="shrink-0 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">立候補済</span>
+                    <span className="shrink-0 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">{j.applied}</span>
                   )}
                 </div>
               </button>
@@ -132,19 +135,19 @@ export default function EngineerJobsPage() {
 
               <div className="grid grid-cols-2 gap-3 mb-4 text-sm">
                 <div className="bg-gray-50 rounded-lg p-3">
-                  <div className="text-gray-500">期間</div>
+                  <div className="text-gray-500">{j.period}</div>
                   <div className="font-medium text-gray-900">{selectedJob.period}</div>
                 </div>
                 <div className="bg-gray-50 rounded-lg p-3">
-                  <div className="text-gray-500">開始予定</div>
+                  <div className="text-gray-500">{j.startDate}</div>
                   <div className="font-medium text-gray-900">{selectedJob.startDate}</div>
                 </div>
                 <div className="bg-gray-50 rounded-lg p-3">
-                  <div className="text-gray-500">募集人数</div>
-                  <div className="font-medium text-gray-900">{selectedJob.headcount}名</div>
+                  <div className="text-gray-500">{j.headcount}</div>
+                  <div className="font-medium text-gray-900">{selectedJob.headcount}{j.headcountUnit}</div>
                 </div>
                 <div className="bg-gray-50 rounded-lg p-3">
-                  <div className="text-gray-500">分野</div>
+                  <div className="text-gray-500">{j.field}</div>
                   <div className="flex flex-wrap gap-1 mt-1">
                     {selectedJob.specialties.map(s => <SpecialtyBadge key={s} specialty={s} />)}
                   </div>
@@ -152,7 +155,7 @@ export default function EngineerJobsPage() {
               </div>
 
               <div className="mb-4">
-                <h3 className="text-sm font-medium text-gray-700 mb-2">必須スキル</h3>
+                <h3 className="text-sm font-medium text-gray-700 mb-2">{j.requiredSkills}</h3>
                 <div className="flex flex-wrap gap-1">
                   {selectedJob.requiredSkills.map(s => (
                     <span key={s} className="text-xs bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full">{s}</span>
@@ -161,19 +164,19 @@ export default function EngineerJobsPage() {
               </div>
 
               <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-700 mb-2">案件詳細</h3>
+                <h3 className="text-sm font-medium text-gray-700 mb-2">{j.jobDetail}</h3>
                 <p className="text-sm text-gray-600 whitespace-pre-line leading-relaxed">{selectedJob.description}</p>
               </div>
 
               {applySuccess && (
                 <div className="bg-green-50 text-green-700 px-4 py-3 rounded-lg text-sm mb-4">
-                  立候補しました！VTaBridgeの担当者がご連絡いたします。
+                  {j.applySuccess}
                 </div>
               )}
 
               {appliedJobs.has(selectedJob.id) ? (
                 <div className="bg-green-50 text-green-700 px-4 py-3 rounded-lg text-sm text-center font-medium">
-                  この案件には立候補済みです
+                  {j.alreadyApplied}
                 </div>
               ) : showApplyForm ? (
                 <div className="space-y-3">
@@ -181,7 +184,7 @@ export default function EngineerJobsPage() {
                     value={applyMsg}
                     onChange={e => setApplyMsg(e.target.value)}
                     rows={4}
-                    placeholder="志望動機・アピールポイントなど（任意）"
+                    placeholder={j.motivationPlaceholder}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none"
                   />
                   <div className="flex gap-2">
@@ -189,13 +192,13 @@ export default function EngineerJobsPage() {
                       onClick={handleApply}
                       className="flex-1 bg-blue-600 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
                     >
-                      立候補する
+                      {j.applySubmit}
                     </button>
                     <button
                       onClick={() => setShowApplyForm(false)}
                       className="px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50"
                     >
-                      キャンセル
+                      {t.common.cancel}
                     </button>
                   </div>
                 </div>
@@ -204,14 +207,14 @@ export default function EngineerJobsPage() {
                   onClick={() => setShowApplyForm(true)}
                   className="w-full bg-blue-600 text-white py-3 rounded-xl font-medium hover:bg-blue-700 transition-colors"
                 >
-                  この案件に立候補する
+                  {j.apply}
                 </button>
               )}
             </div>
           ) : (
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center text-gray-400">
               <div className="text-4xl mb-3">💼</div>
-              <p className="text-sm">案件を選択すると詳細が表示されます</p>
+              <p className="text-sm">{j.selectJobPrompt}</p>
             </div>
           )}
         </div>

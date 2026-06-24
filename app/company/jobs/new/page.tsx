@@ -4,12 +4,16 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '@/lib/authStore';
 import { db } from '@/lib/db';
-import { Specialty, SPECIALTY_LABELS, SPECIALTIES } from '@/lib/types';
+import { Specialty, SPECIALTIES } from '@/lib/types';
 import SpecialtyBadge from '@/components/SpecialtyBadge';
+import { useT } from '@/hooks/useT';
 
 export default function NewJobPage() {
   const router = useRouter();
   const { user } = useAuthStore();
+  const { t } = useT();
+  const f = t.company.jobForm;
+  const c = t.common;
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -40,7 +44,7 @@ export default function NewJobPage() {
     e.preventDefault();
     if (!user) return;
     if (specialties.length === 0) {
-      setError('得意分野を1つ以上選択してください');
+      setError(f.errorNoSpecialty);
       return;
     }
     setLoading(true);
@@ -64,57 +68,57 @@ export default function NewJobPage() {
     <div className="max-w-2xl">
       <div className="flex items-center gap-3 mb-6">
         <Link href="/company/jobs" className="text-gray-500 hover:text-gray-700 text-sm">
-          ← 戻る
+          {c.back}
         </Link>
-        <h1 className="text-2xl font-bold text-gray-900">案件を掲載する</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{f.newTitle}</h1>
       </div>
 
       <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 mb-6 text-sm text-indigo-800">
-        <strong>注意:</strong> 報酬金額はデータベースに保存されますが、エンジニアには表示されません。
+        <strong>{f.salaryNote.split(':')[0]}:</strong> {f.salaryNote.split(':').slice(1).join(':')}
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
-          <h2 className="font-semibold text-gray-900">案件基本情報</h2>
+          <h2 className="font-semibold text-gray-900">{f.basicInfo}</h2>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">案件名 <span className="text-red-500">*</span></label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{f.jobTitle} <span className="text-red-500">*</span></label>
             <input
               type="text"
               required
               value={title}
               onChange={e => setTitle(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="例: React/TypeScriptフロントエンドエンジニア"
+              placeholder={f.jobTitlePlaceholder}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">案件詳細 <span className="text-red-500">*</span></label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{f.description} <span className="text-red-500">*</span></label>
             <textarea
               required
               value={description}
               onChange={e => setDescription(e.target.value)}
               rows={6}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
-              placeholder="業務内容・必須スキル・歓迎スキルなど詳細を記載してください"
+              placeholder={f.descriptionPlaceholder}
             />
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">期間 <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{f.period} <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 required
                 value={period}
                 onChange={e => setPeriod(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="例: 3ヶ月〜（延長可能性あり）"
+                placeholder={f.periodPlaceholder}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">開始予定日 <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{f.startDate} <span className="text-red-500">*</span></label>
               <input
                 type="date"
                 required
@@ -127,7 +131,7 @@ export default function NewJobPage() {
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">募集人数 <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{f.headcount} <span className="text-red-500">*</span></label>
               <input
                 type="number"
                 required
@@ -139,8 +143,8 @@ export default function NewJobPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                月額単価（円）<span className="text-red-500">*</span>
-                <span className="ml-1 text-xs text-gray-400 font-normal">※エンジニアには非表示</span>
+                {f.salary}<span className="text-red-500">*</span>
+                <span className="ml-1 text-xs text-gray-400 font-normal">{f.salaryHidden}</span>
               </label>
               <input
                 type="number"
@@ -149,17 +153,17 @@ export default function NewJobPage() {
                 value={salary}
                 onChange={e => setSalary(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="例: 800000"
+                placeholder={f.salaryPlaceholder}
               />
             </div>
           </div>
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
-          <h2 className="font-semibold text-gray-900">スキル・分野</h2>
+          <h2 className="font-semibold text-gray-900">{f.skillsTitle}</h2>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">必須スキル</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{f.requiredSkills}</label>
             <div className="flex gap-2 mb-2">
               <input
                 type="text"
@@ -167,14 +171,14 @@ export default function NewJobPage() {
                 onChange={e => setRequiredSkillInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addSkill())}
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
-                placeholder="例: React, TypeScript, AWS"
+                placeholder={f.skillPlaceholder}
               />
               <button
                 type="button"
                 onClick={addSkill}
                 className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-200 transition-colors"
               >
-                追加
+                {c.add}
               </button>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -197,7 +201,7 @@ export default function NewJobPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">得意分野 <span className="text-red-500">*</span></label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{f.specialties} <span className="text-red-500">*</span></label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
               {SPECIALTIES.map(sp => (
                 <button
@@ -225,10 +229,10 @@ export default function NewJobPage() {
             disabled={loading}
             className="bg-indigo-600 text-white px-8 py-3 rounded-xl font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50"
           >
-            {loading ? '掲載中...' : '案件を掲載する'}
+            {loading ? f.submitting : f.submit}
           </button>
           <Link href="/company/jobs" className="px-6 py-3 border border-gray-300 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors">
-            キャンセル
+            {c.cancel}
           </Link>
         </div>
       </form>

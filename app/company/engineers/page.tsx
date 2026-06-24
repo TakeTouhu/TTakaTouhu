@@ -2,15 +2,18 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { db } from '@/lib/db';
-import { EngineerProfile, User, Specialty, SPECIALTY_LABELS, SPECIALTIES } from '@/lib/types';
+import { EngineerProfile, User, Specialty, SPECIALTIES } from '@/lib/types';
 import SkillBadge from '@/components/SkillBadge';
 import SpecialtyBadge from '@/components/SpecialtyBadge';
+import { useT } from '@/hooks/useT';
 
 interface EngineerWithUser extends EngineerProfile {
   user: User | null;
 }
 
 export default function CompanyEngineersPage() {
+  const { t } = useT();
+  const e = t.company.engineers;
   const [engineers, setEngineers] = useState<EngineerWithUser[]>([]);
   const [filtered, setFiltered] = useState<EngineerWithUser[]>([]);
   const [search, setSearch] = useState('');
@@ -29,14 +32,14 @@ export default function CompanyEngineersPage() {
     let result = engineers;
     if (search) {
       const q = search.toLowerCase();
-      result = result.filter(e =>
-        e.name.toLowerCase().includes(q) ||
-        e.bio.toLowerCase().includes(q) ||
-        e.skills.some(s => s.language.toLowerCase().includes(q)),
+      result = result.filter(eng =>
+        eng.name.toLowerCase().includes(q) ||
+        eng.bio.toLowerCase().includes(q) ||
+        eng.skills.some(s => s.language.toLowerCase().includes(q)),
       );
     }
     if (specialtyFilter) {
-      result = result.filter(e => e.specialties.includes(specialtyFilter));
+      result = result.filter(eng => eng.specialties.includes(specialtyFilter));
     }
     setFiltered(result);
   }, [search, specialtyFilter, engineers]);
@@ -44,31 +47,31 @@ export default function CompanyEngineersPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">エンジニア一覧</h1>
-        <p className="text-gray-500 mt-1">登録エンジニアを検索・閲覧できます</p>
+        <h1 className="text-2xl font-bold text-gray-900">{e.title}</h1>
+        <p className="text-gray-500 mt-1">{e.subtitle}</p>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <input
           type="text"
           value={search}
-          onChange={e => setSearch(e.target.value)}
-          placeholder="名前・スキルで検索"
+          onChange={ev => setSearch(ev.target.value)}
+          placeholder={e.searchPlaceholder}
           className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
         />
         <select
           value={specialtyFilter}
-          onChange={e => setSpecialtyFilter(e.target.value as Specialty | '')}
+          onChange={ev => setSpecialtyFilter(ev.target.value as Specialty | '')}
           className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
         >
-          <option value="">すべての分野</option>
-          {SPECIALTIES.map(s => <option key={s} value={s}>{SPECIALTY_LABELS[s]}</option>)}
+          <option value="">{e.allFields}</option>
+          {SPECIALTIES.map(s => <option key={s} value={s}>{t.specialty[s]}</option>)}
         </select>
       </div>
 
       {filtered.length === 0 ? (
         <div className="bg-white rounded-xl p-12 text-center text-gray-500 border border-gray-100">
-          条件に合うエンジニアが見つかりませんでした
+          {e.noResults}
         </div>
       ) : (
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -97,8 +100,8 @@ export default function CompanyEngineersPage() {
                 )}
               </div>
               <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
-                <span>{eng.achievements.length}件の実績</span>
-                <span className="text-indigo-600 font-medium">詳細を見る →</span>
+                <span>{eng.achievements.length}{e.achievements}</span>
+                <span className="text-indigo-600 font-medium">{e.viewDetail}</span>
               </div>
             </Link>
           ))}

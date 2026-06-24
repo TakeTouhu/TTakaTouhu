@@ -1,4 +1,6 @@
-import { Specialty, SPECIALTY_LABELS } from '@/lib/types';
+'use client';
+import { Specialty } from '@/lib/types';
+import { useT } from '@/hooks/useT';
 
 const COLORS: Record<Specialty, string> = {
   web: 'bg-sky-100 text-sky-700',
@@ -14,9 +16,10 @@ interface Props {
 }
 
 export default function SpecialtyBadge({ specialty }: Props) {
+  const { t } = useT();
   return (
     <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-medium ${COLORS[specialty]}`}>
-      {SPECIALTY_LABELS[specialty]}
+      {t.specialty[specialty]}
     </span>
   );
 }

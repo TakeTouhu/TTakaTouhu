@@ -7,10 +7,14 @@ import { db } from '@/lib/db';
 import { EngineerProfile, Job } from '@/lib/types';
 import SkillBadge from '@/components/SkillBadge';
 import SpecialtyBadge from '@/components/SpecialtyBadge';
+import { useT } from '@/hooks/useT';
 
 export default function EngineerDetailPage() {
   const params = useParams();
   const { user } = useAuthStore();
+  const { t } = useT();
+  const d = t.company.engineerDetail;
+  const c = t.common;
   const engineerId = params.id as string;
 
   const [profile, setProfile] = useState<EngineerProfile | null>(null);
@@ -37,9 +41,9 @@ export default function EngineerDetailPage() {
   if (notFound) {
     return (
       <div className="text-center py-16">
-        <p className="text-gray-500">エンジニアが見つかりません</p>
+        <p className="text-gray-500">{d.notFound}</p>
         <Link href="/company/engineers" className="mt-3 inline-block text-indigo-600 hover:underline text-sm">
-          一覧に戻る
+          {d.backLink}
         </Link>
       </div>
     );
@@ -52,7 +56,6 @@ export default function EngineerDetailPage() {
     if (!user || !message.trim()) return;
     setSending(true);
 
-    // Save to local DB
     db.inquiries.create({
       companyId: user.id,
       engineerId,
@@ -60,7 +63,6 @@ export default function EngineerDetailPage() {
       message,
     });
 
-    // Gather names and email for notification
     const companyProfile = db.companyProfiles.findByUserId(user.id);
     const engineerUser = db.users.findById(engineerId);
     const selectedJob = myJobs.find(j => j.id === selectedJobId);
@@ -90,7 +92,7 @@ export default function EngineerDetailPage() {
     <div className="max-w-4xl">
       <div className="mb-6">
         <Link href="/company/engineers" className="text-indigo-600 hover:text-indigo-800 text-sm">
-          ← エンジニア一覧
+          {d.backToList}
         </Link>
       </div>
 
@@ -110,16 +112,16 @@ export default function EngineerDetailPage() {
             </div>
             {profile.bio && (
               <div className="mt-4 pt-4 border-t border-gray-100">
-                <h2 className="text-sm font-semibold text-gray-700 mb-2">自己紹介</h2>
+                <h2 className="text-sm font-semibold text-gray-700 mb-2">{d.bio}</h2>
                 <p className="text-gray-700 leading-relaxed whitespace-pre-line">{profile.bio}</p>
               </div>
             )}
           </div>
 
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h2 className="font-semibold text-gray-900 mb-4">スキル</h2>
+            <h2 className="font-semibold text-gray-900 mb-4">{d.skills}</h2>
             {profile.skills.length === 0 ? (
-              <p className="text-gray-400 text-sm">スキルの登録はありません</p>
+              <p className="text-gray-400 text-sm">{d.noSkills}</p>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {profile.skills.map(s => <SkillBadge key={s.id} language={s.language} level={s.level} />)}
@@ -129,7 +131,7 @@ export default function EngineerDetailPage() {
 
           {profile.achievements.length > 0 && (
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <h2 className="font-semibold text-gray-900 mb-4">実績・プロジェクト</h2>
+              <h2 className="font-semibold text-gray-900 mb-4">{d.achievementsTitle}</h2>
               <div className="space-y-4">
                 {profile.achievements.map(a => (
                   <div key={a.id} className="border-l-2 border-indigo-200 pl-4">
@@ -149,41 +151,39 @@ export default function EngineerDetailPage() {
 
         <div className="space-y-4">
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h2 className="font-semibold text-gray-900 mb-4">案件依頼を送る</h2>
-            <p className="text-xs text-gray-500 mb-4">
-              依頼内容はVTaBridgeの営業担当を通じてエンジニアへ連絡されます。
-            </p>
+            <h2 className="font-semibold text-gray-900 mb-4">{d.inquiryTitle}</h2>
+            <p className="text-xs text-gray-500 mb-4">{d.inquiryNote}</p>
 
             {sent ? (
               <div className="bg-green-50 text-green-700 px-4 py-4 rounded-xl text-sm text-center">
-                <div className="font-medium mb-1">依頼を送信しました</div>
-                <div className="text-xs">VTaBridgeの担当者が折り返しご連絡いたします。</div>
+                <div className="font-medium mb-1">{d.inquirySent}</div>
+                <div className="text-xs">{d.inquirySentNote}</div>
                 <button onClick={() => setSent(false)} className="mt-3 text-xs underline">
-                  別の依頼を送る
+                  {d.anotherInquiry}
                 </button>
               </div>
             ) : (
               <form onSubmit={handleInquiry} className="space-y-3">
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">関連案件（任意）</label>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">{d.selectJob}</label>
                   <select
                     value={selectedJobId}
-                    onChange={e => setSelectedJobId(e.target.value)}
+                    onChange={ev => setSelectedJobId(ev.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
                   >
-                    <option value="">案件を選択しない</option>
+                    <option value="">{d.noJobSelected}</option>
                     {myJobs.map(j => <option key={j.id} value={j.id}>{j.title}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">メッセージ <span className="text-red-500">*</span></label>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">{d.message} <span className="text-red-500">*</span></label>
                   <textarea
                     required
                     value={message}
-                    onChange={e => setMessage(e.target.value)}
+                    onChange={ev => setMessage(ev.target.value)}
                     rows={5}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm resize-none"
-                    placeholder="依頼内容・案件概要・条件など"
+                    placeholder={d.messagePlaceholder}
                   />
                 </div>
                 <button
@@ -191,7 +191,7 @@ export default function EngineerDetailPage() {
                   disabled={sending}
                   className="w-full bg-indigo-600 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50"
                 >
-                  {sending ? '送信中...' : '依頼を送る'}
+                  {sending ? c.sending : d.sendButton}
                 </button>
               </form>
             )}

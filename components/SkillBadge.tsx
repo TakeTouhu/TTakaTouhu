@@ -1,4 +1,6 @@
-import { SkillLevel, SKILL_LEVEL_LABELS } from '@/lib/types';
+'use client';
+import { SkillLevel } from '@/lib/types';
+import { useT } from '@/hooks/useT';
 
 const LEVEL_COLORS: Record<SkillLevel, string> = {
   beginner: 'bg-gray-100 text-gray-600',
@@ -13,11 +15,12 @@ interface Props {
 }
 
 export default function SkillBadge({ language, level }: Props) {
+  const { t } = useT();
   return (
     <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${LEVEL_COLORS[level]}`}>
       {language}
       <span className="opacity-70">·</span>
-      {SKILL_LEVEL_LABELS[level]}
+      {t.skillLevel[level]}
     </span>
   );
 }

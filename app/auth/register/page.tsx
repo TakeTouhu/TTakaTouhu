@@ -5,11 +5,15 @@ import Link from 'next/link';
 import { db } from '@/lib/db';
 import { useAuthStore } from '@/lib/authStore';
 import { AccountType } from '@/lib/types';
+import { useT } from '@/hooks/useT';
+import LanguageToggle from '@/components/LanguageToggle';
 
 function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { login } = useAuthStore();
+  const { t } = useT();
+  const a = t.auth;
 
   const [accountType, setAccountType] = useState<AccountType>('engineer');
   const [email, setEmail] = useState('');
@@ -29,18 +33,18 @@ function RegisterForm() {
     setError('');
 
     if (password !== confirm) {
-      setError('パスワードが一致しません');
+      setError(a.errorPasswordMatch);
       return;
     }
     if (password.length < 8) {
-      setError('パスワードは8文字以上で入力してください');
+      setError(a.errorPasswordMin);
       return;
     }
 
     setLoading(true);
     try {
       if (db.users.findByEmail(email)) {
-        setError('このメールアドレスはすでに登録されています');
+        setError(a.errorEmailExists);
         setLoading(false);
         return;
       }
@@ -52,7 +56,7 @@ function RegisterForm() {
         router.push('/company/profile?setup=1');
       }
     } catch {
-      setError('登録に失敗しました。もう一度お試しください。');
+      setError(a.errorRegister);
     } finally {
       setLoading(false);
     }
@@ -62,16 +66,19 @@ function RegisterForm() {
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 px-4">
       <div className="max-w-md w-full mx-auto">
         <div className="text-center mb-8">
+          <div className="flex justify-end mb-4">
+            <LanguageToggle />
+          </div>
           <Link href="/" className="inline-flex items-center gap-2 mb-6">
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">V</div>
             <span className="font-bold text-xl text-gray-900">VTa Platform</span>
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900">新規アカウント登録</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{a.registerTitle}</h1>
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">アカウント種別</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{a.accountType}</label>
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
@@ -83,7 +90,7 @@ function RegisterForm() {
                 }`}
               >
                 <div className="text-2xl mb-1">👨‍💻</div>
-                <div className="font-medium text-sm">エンジニア</div>
+                <div className="font-medium text-sm">{a.engineer}</div>
               </button>
               <button
                 type="button"
@@ -95,14 +102,14 @@ function RegisterForm() {
                 }`}
               >
                 <div className="text-2xl mb-1">🏢</div>
-                <div className="font-medium text-sm">企業</div>
+                <div className="font-medium text-sm">{a.company}</div>
               </button>
             </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">メールアドレス</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{a.email}</label>
               <input
                 type="email"
                 required
@@ -113,25 +120,25 @@ function RegisterForm() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">パスワード（8文字以上）</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{a.passwordMin}</label>
               <input
                 type="password"
                 required
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="8文字以上"
+                placeholder={a.passwordMinPlaceholder}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">パスワード（確認）</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{a.passwordConfirm}</label>
               <input
                 type="password"
                 required
                 value={confirm}
                 onChange={e => setConfirm(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="もう一度入力"
+                placeholder={a.passwordConfirmPlaceholder}
               />
             </div>
 
@@ -146,15 +153,15 @@ function RegisterForm() {
               disabled={loading}
               className="w-full bg-blue-600 text-white py-3 rounded-xl font-medium hover:bg-blue-700 transition-colors disabled:opacity-50"
             >
-              {loading ? '登録中...' : 'アカウントを作成'}
+              {loading ? a.creating : a.createAccount}
             </button>
           </form>
         </div>
 
         <p className="text-center text-sm text-gray-600 mt-6">
-          すでにアカウントをお持ちの方は{' '}
+          {a.hasAccount}{' '}
           <Link href="/auth/login" className="text-blue-600 font-medium hover:underline">
-            こちらからログイン
+            {a.loginHere}
           </Link>
         </p>
       </div>
@@ -164,7 +171,7 @@ function RegisterForm() {
 
 export default function RegisterPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center"><div className="text-gray-400">読み込み中...</div></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center"><div className="text-gray-400">Loading...</div></div>}>
       <RegisterForm />
     </Suspense>
   );

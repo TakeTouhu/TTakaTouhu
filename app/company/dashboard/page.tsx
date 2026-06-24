@@ -4,9 +4,12 @@ import Link from 'next/link';
 import { useAuthStore } from '@/lib/authStore';
 import { db } from '@/lib/db';
 import { CompanyProfile, Job } from '@/lib/types';
+import { useT } from '@/hooks/useT';
 
 export default function CompanyDashboard() {
   const { user } = useAuthStore();
+  const { t } = useT();
+  const d = t.company.dashboard;
   const [profile, setProfile] = useState<CompanyProfile | null>(null);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [engineerCount, setEngineerCount] = useState(0);
@@ -24,19 +27,19 @@ export default function CompanyDashboard() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">
-          {profile?.companyName ? `${profile.companyName}` : 'ダッシュボード'}
+          {profile?.companyName ?? d.postedJobs}
         </h1>
-        <p className="text-gray-500 mt-1">VTa Platform 企業ポータル</p>
+        <p className="text-gray-500 mt-1">{d.portalTitle}</p>
       </div>
 
       {!profile?.companyName && (
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 flex items-start gap-3">
           <span className="text-2xl">⚠️</span>
           <div>
-            <p className="font-medium text-amber-800">企業情報を登録してください</p>
-            <p className="text-amber-700 text-sm mt-1">企業情報を登録することで案件掲載が可能になります。</p>
+            <p className="font-medium text-amber-800">{d.setupAlert}</p>
+            <p className="text-amber-700 text-sm mt-1">{d.setupAlertDesc}</p>
             <Link href="/company/profile" className="mt-2 inline-block text-sm font-medium text-amber-800 underline">
-              企業情報を登録する →
+              {d.setupLink}
             </Link>
           </div>
         </div>
@@ -46,9 +49,9 @@ export default function CompanyDashboard() {
         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
           <div className="text-3xl mb-2">💼</div>
           <div className="text-2xl font-bold text-gray-900">{jobs.length}</div>
-          <div className="text-gray-500 text-sm">掲載中の案件</div>
+          <div className="text-gray-500 text-sm">{d.postedJobs}</div>
           <Link href="/company/jobs" className="mt-3 inline-block text-xs text-indigo-600 hover:underline">
-            案件を管理する →
+            {d.manageJobs}
           </Link>
         </div>
         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
@@ -56,14 +59,14 @@ export default function CompanyDashboard() {
           <div className="text-2xl font-bold text-gray-900">
             {jobs.reduce((acc, j) => acc + db.applications.findByJobId(j.id).length, 0)}
           </div>
-          <div className="text-gray-500 text-sm">受け取った立候補</div>
+          <div className="text-gray-500 text-sm">{d.receivedApps}</div>
         </div>
         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
           <div className="text-3xl mb-2">👨‍💻</div>
           <div className="text-2xl font-bold text-gray-900">{engineerCount}</div>
-          <div className="text-gray-500 text-sm">登録エンジニア数</div>
+          <div className="text-gray-500 text-sm">{d.registeredEngineers}</div>
           <Link href="/company/engineers" className="mt-3 inline-block text-xs text-indigo-600 hover:underline">
-            エンジニアを探す →
+            {d.findEngineers}
           </Link>
         </div>
       </div>
@@ -71,16 +74,16 @@ export default function CompanyDashboard() {
       <div className="grid md:grid-cols-2 gap-6">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bold text-gray-900">自社の案件</h2>
+            <h2 className="font-bold text-gray-900">{d.myJobs}</h2>
             <Link href="/company/jobs/new" className="text-sm text-indigo-600 hover:underline">
-              + 新規掲載
+              {d.newJob}
             </Link>
           </div>
           {jobs.length === 0 ? (
             <div className="text-center py-6">
-              <p className="text-gray-400 text-sm">案件がまだありません</p>
+              <p className="text-gray-400 text-sm">{d.noJobs}</p>
               <Link href="/company/jobs/new" className="mt-2 inline-block text-sm text-indigo-600 hover:underline">
-                最初の案件を掲載する →
+                {d.firstJob}
               </Link>
             </div>
           ) : (
@@ -90,17 +93,17 @@ export default function CompanyDashboard() {
                   <div>
                     <div className="text-sm font-medium text-gray-900">{job.title}</div>
                     <div className="text-xs text-gray-500">
-                      {db.applications.findByJobId(job.id).length}名が立候補
+                      {db.applications.findByJobId(job.id).length}{d.applicants}
                     </div>
                   </div>
                   <span className={`text-xs px-2 py-1 rounded-full ${job.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                    {job.isActive ? '公開中' : '非公開'}
+                    {job.isActive ? d.active : d.inactive}
                   </span>
                 </div>
               ))}
               {jobs.length > 3 && (
                 <Link href="/company/jobs" className="block text-center text-xs text-indigo-600 hover:underline pt-1">
-                  すべて見る ({jobs.length}件)
+                  {`${d.manageJobs} (${jobs.length})`}
                 </Link>
               )}
             </div>
@@ -108,13 +111,13 @@ export default function CompanyDashboard() {
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="font-bold text-gray-900 mb-4">クイックアクション</h2>
+          <h2 className="font-bold text-gray-900 mb-4">{d.quickActions}</h2>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { href: '/company/jobs/new', icon: '➕', label: '案件を掲載' },
-              { href: '/company/engineers', icon: '🔍', label: 'エンジニアを探す' },
-              { href: '/company/jobs', icon: '📋', label: '案件を管理' },
-              { href: '/company/profile', icon: '🏢', label: '企業情報編集' },
+              { href: '/company/jobs/new', icon: '➕', label: d.postJob },
+              { href: '/company/engineers', icon: '🔍', label: d.findEngineersAction },
+              { href: '/company/jobs', icon: '📋', label: d.manageJobsAction },
+              { href: '/company/profile', icon: '🏢', label: d.editCompanyInfo },
             ].map(item => (
               <Link
                 key={item.href}
