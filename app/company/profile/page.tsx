@@ -1,13 +1,14 @@
 'use client';
 import { useEffect, useState, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/authStore';
 import { db } from '@/lib/db';
 
 const INDUSTRIES = ['IT・ソフトウェア', 'Webサービス', 'ゲーム', '金融・フィンテック', '医療・ヘルスケア', '製造業', 'コンサルティング', '教育', 'その他'];
 
 function CompanyProfileForm() {
-  const { user } = useAuthStore();
+  const { user, logout } = useAuthStore();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const isSetup = searchParams.get('setup') === '1';
 
@@ -17,6 +18,9 @@ function CompanyProfileForm() {
   const [description, setDescription] = useState('');
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -43,6 +47,14 @@ function CompanyProfileForm() {
     setSaved(true);
     setLoading(false);
     setTimeout(() => setSaved(false), 3000);
+  };
+
+  const handleDeleteAccount = () => {
+    if (!user || deleteConfirmText !== 'DELETE') return;
+    setDeleting(true);
+    db.deleteAccount(user.id, 'company');
+    logout();
+    router.push('/');
   };
 
   return (
@@ -115,6 +127,55 @@ function CompanyProfileForm() {
           {saved && <span className="text-green-600 text-sm font-medium">保存しました ✓</span>}
         </div>
       </form>
+
+      <div className="mt-12 border-t border-red-100 pt-8">
+        <h2 className="text-lg font-semibold text-red-700 mb-2">危険な操作</h2>
+        <p className="text-sm text-gray-500 mb-4">
+          アカウントを削除すると、企業情報・掲載案件・すべての依頼履歴が完全に削除されます。この操作は取り消せません。
+        </p>
+        {!showDeleteConfirm ? (
+          <button
+            type="button"
+            onClick={() => setShowDeleteConfirm(true)}
+            className="border border-red-300 text-red-600 px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-red-50 transition-colors"
+          >
+            アカウントを削除する
+          </button>
+        ) : (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-5 space-y-4 max-w-md">
+            <p className="text-sm font-medium text-red-800">
+              本当にアカウントを削除しますか？
+            </p>
+            <p className="text-sm text-red-700">
+              確認のため、下のフィールドに <strong>DELETE</strong> と入力してください。
+            </p>
+            <input
+              type="text"
+              value={deleteConfirmText}
+              onChange={e => setDeleteConfirmText(e.target.value)}
+              placeholder="DELETE"
+              className="w-full px-3 py-2 border border-red-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 text-sm"
+            />
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={handleDeleteAccount}
+                disabled={deleteConfirmText !== 'DELETE' || deleting}
+                className="bg-red-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {deleting ? '削除中...' : '完全に削除する'}
+              </button>
+              <button
+                type="button"
+                onClick={() => { setShowDeleteConfirm(false); setDeleteConfirmText(''); }}
+                className="border border-gray-300 text-gray-600 px-5 py-2 rounded-lg text-sm hover:bg-gray-50 transition-colors"
+              >
+                キャンセル
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

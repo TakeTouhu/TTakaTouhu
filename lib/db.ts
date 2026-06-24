@@ -286,4 +286,47 @@ export const db = {
       return newInquiry;
     },
   },
+
+  deleteAccount: (userId: string, accountType: 'engineer' | 'company'): void => {
+    // Remove user record
+    setAll(KEYS.users, getAll<User>(KEYS.users).filter(u => u.id !== userId));
+
+    if (accountType === 'engineer') {
+      // Remove engineer profile
+      setAll(
+        KEYS.engineerProfiles,
+        getAll<EngineerProfile>(KEYS.engineerProfiles).filter(p => p.userId !== userId),
+      );
+      // Remove all applications by this engineer
+      setAll(
+        KEYS.applications,
+        getAll<Application>(KEYS.applications).filter(a => a.engineerId !== userId),
+      );
+      // Remove inquiries targeting this engineer
+      setAll(
+        KEYS.inquiries,
+        getAll<JobInquiry>(KEYS.inquiries).filter(i => i.engineerId !== userId),
+      );
+    } else {
+      // Remove company profile
+      setAll(
+        KEYS.companyProfiles,
+        getAll<CompanyProfile>(KEYS.companyProfiles).filter(p => p.userId !== userId),
+      );
+      // Remove all jobs by this company and their applications
+      const companyJobIds = getAll<Job>(KEYS.jobs)
+        .filter(j => j.companyId === userId)
+        .map(j => j.id);
+      setAll(KEYS.jobs, getAll<Job>(KEYS.jobs).filter(j => j.companyId !== userId));
+      setAll(
+        KEYS.applications,
+        getAll<Application>(KEYS.applications).filter(a => !companyJobIds.includes(a.jobId)),
+      );
+      // Remove inquiries from this company
+      setAll(
+        KEYS.inquiries,
+        getAll<JobInquiry>(KEYS.inquiries).filter(i => i.companyId !== userId),
+      );
+    }
+  },
 };
