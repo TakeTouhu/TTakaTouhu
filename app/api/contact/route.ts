@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
 const NOTIFY_EMAIL = 'vtabridge.t.ryuto@gmail.com';
+
+export async function GET() {
+  return NextResponse.json({
+    resendKeySet: !!process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 'your_resend_api_key_here',
+  });
+}
 
 export async function POST(req: NextRequest) {
   const { name, company, email, topic, message, lang } = await req.json();
@@ -10,35 +16,25 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
   }
 
-  const gmailUser = process.env.GMAIL_USER;
-  const gmailPass = process.env.GMAIL_APP_PASSWORD;
-
-  if (!gmailUser || !gmailPass || gmailPass === 'your_app_password_here') {
-    console.error('[contact] Gmail credentials not configured in .env.local');
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey || apiKey === 'your_resend_api_key_here') {
+    console.error('[contact] RESEND_API_KEY not configured in .env.local');
     return NextResponse.json(
-      { error: 'Email service not configured. Please set GMAIL_USER and GMAIL_APP_PASSWORD in .env.local.' },
+      { error: 'Email service not configured.' },
       { status: 503 }
     );
   }
 
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-      user: gmailUser,
-      pass: gmailPass,
-    },
-  });
-
-  const topicLine = topic ? (lang === 'en' ? `Topic: ${topic}` : `ご用件: ${topic}`) : '';
+  const resend = new Resend(apiKey);
   const isEn = lang === 'en';
+  const topicLine = topic ? (isEn ? `Topic: ${topic}` : `ご用件: ${topic}`) : '';
 
   try {
     // Notification to VTaBridge
-    await transporter.sendMail({
-      from: `"VTaBridge Contact Form" <${gmailUser}>`,
+    await resend.emails.send({
+      from: 'VTaBridge Contact Form <onboarding@resend.dev>',
       to: NOTIFY_EMAIL,
+      reply_to: email,
       subject: `【お問い合わせ】${name}様 (${company || '会社名未記入'})`,
       text: [
         `お名前: ${name}`,
@@ -46,14 +42,14 @@ export async function POST(req: NextRequest) {
         `メールアドレス: ${email}`,
         topicLine,
         '',
-        `お問い合わせ内容:`,
+        'お問い合わせ内容:',
         message,
       ].filter(Boolean).join('\n'),
     });
 
     // Auto-reply to inquirer
-    await transporter.sendMail({
-      from: `"VTaBridge" <${gmailUser}>`,
+    await resend.emails.send({
+      from: 'VTaBridge <onboarding@resend.dev>',
       to: email,
       subject: isEn
         ? 'Thank you for contacting VTaBridge'
