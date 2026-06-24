@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/authStore';
 import { db } from '@/lib/db';
@@ -8,9 +8,15 @@ import CompanyNavbar from '@/components/CompanyNavbar';
 export default function CompanyLayout({ children }: { children: React.ReactNode }) {
   const { user } = useAuthStore();
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     db.init();
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
     if (!user) {
       router.push('/auth/login');
       return;
@@ -18,7 +24,15 @@ export default function CompanyLayout({ children }: { children: React.ReactNode 
     if (user.accountType !== 'company') {
       router.push('/engineer/dashboard');
     }
-  }, [user, router]);
+  }, [mounted, user, router]);
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-gray-400 text-sm">読み込み中...</div>
+      </div>
+    );
+  }
 
   if (!user || user.accountType !== 'company') return null;
 
