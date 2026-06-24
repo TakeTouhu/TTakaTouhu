@@ -47,16 +47,40 @@ export default function EngineerDetailPage() {
 
   if (!profile) return null;
 
-  const handleInquiry = (e: React.FormEvent) => {
+  const handleInquiry = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !message.trim()) return;
     setSending(true);
+
+    // Save to local DB
     db.inquiries.create({
       companyId: user.id,
       engineerId,
       jobId: selectedJobId || undefined,
       message,
     });
+
+    // Gather names and email for notification
+    const companyProfile = db.companyProfiles.findByUserId(user.id);
+    const engineerUser = db.users.findById(engineerId);
+    const selectedJob = myJobs.find(j => j.id === selectedJobId);
+
+    try {
+      await fetch('/api/send-inquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          companyName: companyProfile?.companyName ?? user.email,
+          engineerName: profile.name,
+          engineerEmail: engineerUser?.email ?? '',
+          jobTitle: selectedJob?.title,
+          message,
+        }),
+      });
+    } catch {
+      // Email failure does not block the inquiry submission
+    }
+
     setSent(true);
     setSending(false);
     setMessage('');
