@@ -2,9 +2,15 @@
 import { useState } from 'react';
 import { useLanguage } from '@/components/LanguageProvider';
 
+const DISPLAY_EMAIL = 'vtabridge.t.ryuto@gmail.com';
+
 export default function Contact() {
   const { lang, t } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const [form, setForm] = useState({ name: '', company: '', email: '', topic: '', message: '' });
 
   const serviceOptions = lang === 'en'
     ? ['Overseas Engineer Outsourcing & Development', 'Contract Product Development', 'Product Offering', 'General inquiry']
@@ -12,15 +18,34 @@ export default function Contact() {
 
   const infos = lang === 'en'
     ? [
-        { icon: '📧', title: 'Email', value: 'contact@vtbridge.jp' },
+        { icon: '📧', title: 'Email', value: DISPLAY_EMAIL },
         { icon: '⏱', title: 'Response Time', value: 'Within 2 business days' },
         { icon: '💬', title: 'Languages', value: 'Japanese / English' },
       ]
     : [
-        { icon: '📧', title: 'メールアドレス', value: 'contact@vtbridge.jp' },
+        { icon: '📧', title: 'メールアドレス', value: DISPLAY_EMAIL },
         { icon: '⏱', title: '返信目安', value: '2営業日以内' },
         { icon: '💬', title: '対応言語', value: '日本語 / English' },
       ];
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, lang }),
+      });
+      if (!res.ok) throw new Error('send failed');
+      setSubmitted(true);
+    } catch {
+      setError(t('送信に失敗しました。しばらくしてからもう一度お試しください。', 'Failed to send. Please try again later.'));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -104,23 +129,17 @@ export default function Contact() {
                   {t('送信完了しました！', 'Message Sent!')}
                 </h3>
                 <p className="text-gray-500">
-                  {t('2営業日以内にご返答いたします。', 'We\'ll get back to you within 2 business days.')}
+                  {t('担当の営業が1〜2営業日以内にご返信いたします。', 'Our sales representative will get back to you within 1–2 business days.')}
                 </p>
                 <button
-                  onClick={() => setSubmitted(false)}
+                  onClick={() => { setSubmitted(false); setForm({ name: '', company: '', email: '', topic: '', message: '' }); }}
                   className="mt-6 text-blue-700 font-semibold hover:underline text-sm"
                 >
                   {t('別のお問い合わせをする', 'Send another message')}
                 </button>
               </div>
             ) : (
-              <form
-                className="space-y-5"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setSubmitted(true);
-                }}
-              >
+              <form className="space-y-5" onSubmit={handleSubmit}>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -129,6 +148,8 @@ export default function Contact() {
                     <input
                       type="text"
                       required
+                      value={form.name}
+                      onChange={(e) => setForm({ ...form, name: e.target.value })}
                       placeholder={t('山田 太郎', 'Jane Smith')}
                       className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
                     />
@@ -140,6 +161,8 @@ export default function Contact() {
                     <input
                       type="text"
                       required
+                      value={form.company}
+                      onChange={(e) => setForm({ ...form, company: e.target.value })}
                       placeholder={t('株式会社〇〇', 'Acme Corp')}
                       className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
                     />
@@ -152,6 +175,8 @@ export default function Contact() {
                   <input
                     type="email"
                     required
+                    value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
                     placeholder="example@company.com"
                     className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
                   />
@@ -160,7 +185,11 @@ export default function Contact() {
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     {t('ご用件', 'Topic')}
                   </label>
-                  <select className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow bg-white">
+                  <select
+                    value={form.topic}
+                    onChange={(e) => setForm({ ...form, topic: e.target.value })}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow bg-white"
+                  >
                     <option value="">{t('選択してください', 'Select a topic')}</option>
                     {serviceOptions.map((opt) => (
                       <option key={opt} value={opt}>{opt}</option>
@@ -174,6 +203,8 @@ export default function Contact() {
                   <textarea
                     required
                     rows={5}
+                    value={form.message}
+                    onChange={(e) => setForm({ ...form, message: e.target.value })}
                     placeholder={t(
                       '必要なエンジニアのスキル、期間、ご予算感など、お気軽にご記入ください。',
                       'Please describe the engineer skills you need, the project duration, and your rough budget.'
@@ -181,11 +212,15 @@ export default function Contact() {
                     className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow resize-none"
                   />
                 </div>
+                {error && (
+                  <p className="text-red-600 text-sm">{error}</p>
+                )}
                 <button
                   type="submit"
-                  className="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-4 rounded-xl transition-colors text-base"
+                  disabled={loading}
+                  className="w-full bg-blue-700 hover:bg-blue-800 disabled:opacity-60 text-white font-bold py-4 rounded-xl transition-colors text-base"
                 >
-                  {t('送信する', 'Send Message')}
+                  {loading ? t('送信中...', 'Sending...') : t('送信する', 'Send Message')}
                 </button>
                 <p className="text-xs text-gray-400 text-center">
                   {t(
