@@ -38,10 +38,18 @@ export default function Contact() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...form, lang }),
       });
-      if (!res.ok) throw new Error('send failed');
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'send failed');
+      }
       setSubmitted(true);
-    } catch {
-      setError(t('送信に失敗しました。しばらくしてからもう一度お試しください。', 'Failed to send. Please try again later.'));
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : '';
+      setError(
+        msg.includes('not configured')
+          ? t('メール設定が未完了です。管理者にご連絡ください。', 'Email service is not configured. Please contact the administrator.')
+          : t('送信に失敗しました。しばらくしてからもう一度お試しください。', 'Failed to send. Please try again later.')
+      );
     } finally {
       setLoading(false);
     }
