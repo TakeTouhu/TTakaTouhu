@@ -50,14 +50,27 @@ export default function Footer() {
             ))}
           </nav>
         </div>
-        <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-600">
-          <p>© 2026 VTaBridge. All rights reserved.</p>
-          <p>
-            {t(
-              '本サービスは業務委託リソース提供であり、労働者派遣・有料職業紹介には該当しません。',
-              'VTaBridge provides outsourced resource coordination, not staffing or employment referral services.'
-            )}
-          </p>
+        <div className="border-t border-slate-800 pt-8 space-y-4">
+          <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-500">
+            <Link href="/policies/privacy" className="hover:text-slate-300 transition-colors">
+              {t('プライバシーポリシー', 'Privacy Policy')}
+            </Link>
+            <Link href="/policies/information-security" className="hover:text-slate-300 transition-colors">
+              {t('情報セキュリティ基本方針', 'Information Security Policy')}
+            </Link>
+            <Link href="/policies/anti-social-forces" className="hover:text-slate-300 transition-colors">
+              {t('反社会的勢力排除方針', 'Anti-Social Forces Policy')}
+            </Link>
+          </div>
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 text-xs text-slate-600">
+            <p>© 2026 VTaBridge. All rights reserved.</p>
+            <p>
+              {t(
+                '本サービスは業務委託リソース提供であり、労働者派遣・有料職業紹介には該当しません。',
+                'VTaBridge provides outsourced resource coordination, not staffing or employment referral services.'
+              )}
+            </p>
+          </div>
         </div>
       </div>
     </footer>
