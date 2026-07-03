@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     await resend.emails.send({
       from: 'VTaBridge Contact Form <onboarding@resend.dev>',
       to: NOTIFY_EMAIL,
-      reply_to: email,
+      replyTo: email,
       subject: `【お問い合わせ】${name}様 (${company || '会社名未記入'})`,
       text: [
         `お名前: ${name}`,
