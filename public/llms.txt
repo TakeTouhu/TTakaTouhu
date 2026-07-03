@@ -1,0 +1,32 @@
+# VTaBridge
+
+> 世界の優秀なエンジニアと日本企業をつなぐ架け橋に。
+> The bridge connecting world-class engineers with Japanese companies.
+
+VTaBridge is a B2B engineer resource coordination service that connects Japanese companies with highly skilled overseas engineers. We provide immediate, flexible access to global engineering talent without the overhead of traditional hiring.
+
+## Pages
+
+- [Home](https://vtabridge.jp/): Overview of VTaBridge's service and value proposition
+- [About VTaBridge](https://vtabridge.jp/about): Mission, vision, founder profile, and company values
+- [Company Overview](https://vtabridge.jp/company): Company information, target clients, legal compliance
+- [Services](https://vtabridge.jp/services): Detailed service offerings, tech stack, process flow, and comparison
+- [Contact](https://vtabridge.jp/contact): Inquiry form and contact information
+
+## Services
+
+1. **Engineer Matching** — Requirements hearing and rapid assignment of overseas engineers
+2. **Contract & Operations Management** — End-to-end contract, hours tracking, and deliverable management
+3. **Technical Advisory** — Tech stack and development methodology guidance
+4. **Onboarding Support** — Team integration and communication design
+
+## Technology Stack
+
+- Backend: Java, Python, PHP, Go, Node.js
+- Frontend: React, Vue
+- Cloud: AWS, Azure, GCP
+
+## Contact
+
+- Email: contact@vtabridge.jp
+- LinkedIn: https://www.linkedin.com/company/vtabridge
