@@ -4,7 +4,8 @@ import { LanguageProvider } from "@/components/LanguageProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-const SITE_URL = "https://vtabridge.jp";
+// TODO: 独自ドメイン取得後にここを差し替える（sitemap.xml / robots.txt / llms.txt も同様）
+const SITE_URL = "https://t-taka-touhu.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
