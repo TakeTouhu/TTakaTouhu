@@ -70,11 +70,11 @@ const organizationSchema = {
   },
   contactPoint: {
     "@type": "ContactPoint",
-    email: "contact@vtabridge.jp",
+    email: "vtabridge.t.ryuto@gmail.com",
     contactType: "customer service",
     availableLanguage: ["Japanese", "English"],
   },
-  sameAs: ["https://www.linkedin.com/company/vtabridge"],
+  sameAs: ["https://jp.linkedin.com/in/%E9%BE%8D%E9%A3%9B-%E9%AB%99%E6%A9%8B-495375418"],
   areaServed: { "@type": "Country", name: "Japan" },
   serviceType: "グローバルエンジニア・リソースプロバイダー",
 };
