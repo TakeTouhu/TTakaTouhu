@@ -30,7 +30,7 @@ export default function Footer() {
             </p>
             {/* LinkedIn link (Priority A: link building) */}
             <a
-              href="https://www.linkedin.com/company/vtabridge"
+              href="https://jp.linkedin.com/in/%E9%BE%8D%E9%A3%9B-%E9%AB%99%E6%A9%8B-495375418"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-blue-400 transition-colors"
