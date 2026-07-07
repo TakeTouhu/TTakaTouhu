@@ -7,18 +7,17 @@ VTaBridge is a B2B engineer resource coordination service that connects Japanese
 
 ## Pages
 
-- [Home](https://vtabridge.jp/): Overview of VTaBridge's service and value proposition
-- [About VTaBridge](https://vtabridge.jp/about): Mission, vision, founder profile, and company values
-- [Company Overview](https://vtabridge.jp/company): Company information, target clients, legal compliance
-- [Services](https://vtabridge.jp/services): Detailed service offerings, tech stack, process flow, and comparison
-- [Contact](https://vtabridge.jp/contact): Inquiry form and contact information
+- [Home](https://t-taka-touhu.vercel.app/): Overview of VTaBridge's service and value proposition
+- [About VTaBridge](https://t-taka-touhu.vercel.app/about): Mission, vision, founder profile, and company values
+- [Company Overview](https://t-taka-touhu.vercel.app/company): Company information and corporate profile
+- [Services](https://t-taka-touhu.vercel.app/services): Detailed service offerings, tech stack, process flow, and comparison
+- [Contact](https://t-taka-touhu.vercel.app/contact): Inquiry form and contact information
 
 ## Services
 
-1. **Engineer Matching** — Requirements hearing and rapid assignment of overseas engineers
-2. **Contract & Operations Management** — End-to-end contract, hours tracking, and deliverable management
-3. **Technical Advisory** — Tech stack and development methodology guidance
-4. **Onboarding Support** — Team integration and communication design
+1. **Overseas Engineer Outsourcing & Development** — Requirements hearing, candidate proposal, contract management, and weekly progress reporting
+2. **Contract Product Development** — Full-cycle product development from requirements definition through delivery
+3. **Product Offering (Coming Soon)** — In-house SaaS and digital products under development
 
 ## Technology Stack
 
@@ -28,5 +27,5 @@ VTaBridge is a B2B engineer resource coordination service that connects Japanese
 
 ## Contact
 
-- Email: contact@vtabridge.jp
-- LinkedIn: https://www.linkedin.com/company/vtabridge
+- Email: vtabridge.t.ryuto@gmail.com
+- LinkedIn: https://jp.linkedin.com/in/%E9%BE%8D%E9%A3%9B-%E9%AB%99%E6%A9%8B-495375418

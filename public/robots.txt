@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://vtabridge.jp/sitemap.xml
+Sitemap: https://t-taka-touhu.vercel.app/sitemap.xml
