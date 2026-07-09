@@ -12,7 +12,8 @@ export default function Company() {
         { label: 'Founded', value: 'June 2026' },
         { label: 'Incorporated', value: 'June 2026' },
         { label: 'Capital', value: '（To be announced）' },
-        { label: 'Director', value: 'Ryuto Takahashi' },
+        { label: 'President & CEO', value: 'Ryuto Takahashi' },
+        { label: 'Director', value: 'Tikhomirova Veronika' },
         { label: 'Employees', value: '（To be announced）' },
         { label: 'Main Banking Institution', value: '（To be announced）' },
       ]
@@ -22,7 +23,8 @@ export default function Company() {
         { label: '創業', value: '2026年6月' },
         { label: '設立', value: '2026年6月' },
         { label: '資本金', value: '（記載予定）' },
-        { label: '取締役', value: '髙橋 龍飛（Ryuto Takahashi）' },
+        { label: '代表取締役社長', value: '髙橋 龍飛（Ryuto Takahashi）' },
+        { label: '取締役', value: 'Tikhomirova Veronika（ティホミロワ・ヴェロニカ）' },
         { label: '従業員数', value: '（記載予定）' },
         { label: '主要取引先金融機関', value: '（記載予定）' },
       ];
