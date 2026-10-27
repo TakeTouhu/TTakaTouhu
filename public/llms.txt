@@ -1,29 +1,42 @@
-# VTaBridge
+# VTaVision (operated by VTaBridge)
 
-> 世界の優秀なエンジニアと日本企業をつなぐ架け橋に。
-> The bridge connecting world-class engineers with Japanese companies.
+> 写真から、魅力が伝わる動画へ。
+> VTaVisionは、写真や伝えたい情報をもとに、商品・施設・空間の魅力を伝える動画制作を支援するAIサービスです。
 
-VTaBridge is a B2B engineer resource coordination service that connects Japanese companies with highly skilled overseas engineers. We provide immediate, flexible access to global engineering talent without the overhead of traditional hiring.
+VTaVision is an AI service that supports the production of videos conveying the appeal of
+products, facilities and spaces, based on photos and the information a company wants to
+communicate. It is developed and operated by VTaBridge.
+
+It is not limited to real estate, and it is not a general-purpose video editing tool for
+arbitrary use cases.
 
 ## Pages
 
-- [Home](https://t-taka-touhu.vercel.app/): Overview of VTaBridge's service and value proposition
-- [About VTaBridge](https://t-taka-touhu.vercel.app/about): Mission, vision, founder profile, and company values
-- [Company Overview](https://t-taka-touhu.vercel.app/company): Company information and corporate profile
-- [Services](https://t-taka-touhu.vercel.app/services): Detailed service offerings, tech stack, process flow, and comparison
-- [Contact](https://t-taka-touhu.vercel.app/contact): Inquiry form and contact information
+- [Home](https://t-taka-touhu.vercel.app/): サービス概要、できること、料金、よくある質問
+- [About VTaVision](https://t-taka-touhu.vercel.app/about): 考え方、ミッション、代表メッセージ
+- [Features](https://t-taka-touhu.vercel.app/features): 提供内容と活用が想定される業界、製品仕様
+- [Company](https://t-taka-touhu.vercel.app/company): 運営会社 VTaBridge の会社概要
+- [Contact](https://t-taka-touhu.vercel.app/contact): お問い合わせフォーム
 
-## Services
+## 活用が想定される業界
 
-1. **Overseas Engineer Outsourcing & Development** — Requirements hearing, candidate proposal, contract management, and weekly progress reporting
-2. **Contract Product Development** — Full-cycle product development from requirements definition through delivery
-3. **Product Offering (Coming Soon)** — In-house SaaS and digital products under development
+1. 不動産
+2. ホテル・旅館・グランピング
+3. 結婚式場・イベント会場
+4. アミューズメント・レジャー施設
+5. 住宅・リフォーム
+6. フィットネス施設
 
-## Technology Stack
+いずれかの業界を主な対象としているものではなく、写真で魅力を伝える機会の多い業界での活用を
+想定しています。
 
-- Backend: Java, Python, PHP, Go, Node.js
-- Frontend: React, Vue
-- Cloud: AWS, Azure, GCP
+## 提供状況について
+
+開発を進めている段階のサービスです。準備中の機能や確認中の条件があり、サイト上では
+その状態のまま明示しています。確認できていない数値・条件は記載していません。
+
+写真に写っていない設備・眺望・施工後の姿・実際の体験を正確に再現できることを保証するもの
+ではありません。
 
 ## Contact
 
