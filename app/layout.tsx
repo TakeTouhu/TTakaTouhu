@@ -1,24 +1,26 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./vtavision.css";
 import { LanguageProvider } from "@/components/LanguageProvider";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 
 // TODO: 独自ドメイン取得後にここを差し替える（sitemap.xml / robots.txt / llms.txt も同様）
 const SITE_URL = "https://t-taka-touhu.vercel.app";
 
+const DESCRIPTION =
+  "VTaVisionは、写真や伝えたい情報をもとに、商品・施設・空間の魅力を伝える動画制作を支援するAIサービスです。不動産、ホテル・旅館・グランピング、結婚式場・イベント会場、アミューズメント・レジャー施設、住宅・リフォーム、フィットネス施設での活用を想定しています。";
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "VTaBridge | 海外エンジニア採用・即戦力IT人材でDX推進を加速するグローバルリソースプロバイダー",
-    template: "%s | VTaBridge",
+    default: "VTaVision｜写真から、魅力が伝わる動画へ。",
+    template: "%s | VTaVision",
   },
-  description: "VTaBridgeは海外の優秀なエンジニアと日本企業をつなぐB2Bコーディネーションサービスです。Java・Python・React・AWS対応の即戦力エンジニアを採用コスト不要・フリーランス契約で週単位からご提供します。IT人材不足・DX推進でお悩みの企業様はご相談ください。",
+  description: DESCRIPTION,
   keywords: [
-    "海外エンジニア", "IT人材不足", "DX推進", "グローバルエンジニア", "フリーランスエンジニア",
-    "エンジニアマッチング", "海外IT人材", "オフショア開発", "即戦力エンジニア", "VTaBridge",
+    "VTaVision", "VTaBridge", "動画制作支援", "AI 動画生成", "写真から動画",
+    "不動産 動画", "ホテル 動画", "施設紹介 動画", "物件紹介 動画", "住宅 リフォーム 動画",
   ],
-  authors: [{ name: "髙橋 龍飛 (Ryuto Takahashi)", url: SITE_URL }],
+  authors: [{ name: "VTaBridge", url: SITE_URL }],
   creator: "VTaBridge",
   publisher: "VTaBridge",
   robots: {
@@ -26,29 +28,23 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true },
   },
-  alternates: {
-    canonical: SITE_URL,
-    languages: {
-      "ja-JP": SITE_URL,
-      "en-US": `${SITE_URL}/en`,
-    },
-  },
+  alternates: { canonical: "/" },
   openGraph: {
-    title: "VTaBridge | 海外エンジニア採用・即戦力IT人材でDX推進を加速",
-    description: "海外の優秀なエンジニアと日本企業をつなぐB2Bコーディネーションサービス。採用コスト不要・フリーランス契約で即戦力エンジニアをご提供。",
+    title: "VTaVision｜写真から、魅力が伝わる動画へ。",
+    description:
+      "VTaVisionは、写真や伝えたい情報をもとに、商品・施設・空間の魅力を伝える動画制作を支援するAIサービスです。",
     url: SITE_URL,
-    siteName: "VTaBridge",
+    siteName: "VTaVision",
     locale: "ja_JP",
     type: "website",
-    images: [{ url: `${SITE_URL}/og-image.png`, width: 1200, height: 630, alt: "VTaBridge - グローバルエンジニア・リソースプロバイダー" }],
+    images: [{ url: "/logo.webp", alt: "VTaVision by VTaBridge" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "VTaBridge | 海外エンジニア採用・即戦力IT人材でDX推進を加速",
-    description: "海外の優秀なエンジニアと日本企業をつなぐB2Bコーディネーションサービス。採用コスト不要・フリーランス契約で即戦力エンジニアをご提供。",
-    images: [`${SITE_URL}/og-image.png`],
-    site: "@vtabridge",
-    creator: "@vtabridge",
+    title: "VTaVision｜写真から、魅力が伝わる動画へ。",
+    description:
+      "VTaVisionは、写真や伝えたい情報をもとに、商品・施設・空間の魅力を伝える動画制作を支援するAIサービスです。",
+    images: ["/logo.webp"],
   },
 };
 
@@ -58,15 +54,16 @@ const organizationSchema = {
   "@id": `${SITE_URL}/#organization`,
   name: "VTaBridge",
   url: SITE_URL,
-  logo: `${SITE_URL}/logo.png`,
-  description: "海外の優秀なエンジニアと日本企業をつなぐB2Bコーディネーションサービス",
+  logo: `${SITE_URL}/logo.webp`,
+  description:
+    "写真や情報をもとに商品・施設・空間の魅力を伝える動画制作を支援するAIサービス「VTaVision」の開発・運営",
   foundingDate: "2026",
   founder: {
     "@type": "Person",
     "@id": `${SITE_URL}/#founder`,
     name: "髙橋 龍飛",
     alternateName: "Ryuto Takahashi",
-    jobTitle: "代表",
+    jobTitle: "代表取締役社長",
     worksFor: { "@id": `${SITE_URL}/#organization` },
   },
   contactPoint: {
@@ -77,7 +74,6 @@ const organizationSchema = {
   },
   sameAs: ["https://jp.linkedin.com/in/%E9%BE%8D%E9%A3%9B-%E9%AB%99%E6%A9%8B-495375418"],
   areaServed: { "@type": "Country", name: "Japan" },
-  serviceType: "グローバルエンジニア・リソースプロバイダー",
 };
 
 const websiteSchema = {
@@ -85,10 +81,22 @@ const websiteSchema = {
   "@type": "WebSite",
   "@id": `${SITE_URL}/#website`,
   url: SITE_URL,
-  name: "VTaBridge",
-  description: "海外エンジニアと日本企業をつなぐB2Bコーディネーションサービス",
+  name: "VTaVision",
+  description: DESCRIPTION,
   publisher: { "@id": `${SITE_URL}/#organization` },
-  inLanguage: ["ja", "en"],
+  inLanguage: "ja",
+};
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": `${SITE_URL}/#service`,
+  name: "VTaVision",
+  serviceType: "動画制作支援AIサービス",
+  description:
+    "写真や伝えたい情報をもとに、商品・施設・空間の魅力を伝える動画制作を支援するAIサービス",
+  provider: { "@id": `${SITE_URL}/#organization` },
+  areaServed: { "@type": "Country", name: "Japan" },
 };
 
 export default function RootLayout({
@@ -99,7 +107,6 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <head>
-        <link rel="canonical" href={SITE_URL} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
@@ -108,15 +115,13 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+        />
       </head>
-      <body className="antialiased bg-white text-gray-900">
-        <LanguageProvider>
-          <Header />
-          <main className="pt-16">
-            {children}
-          </main>
-          <Footer />
-        </LanguageProvider>
+      <body>
+        <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
   );
